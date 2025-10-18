@@ -1,1171 +1,2380 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitcoin II - A Second Chance</title>
-
-    <meta name="description" content="The BitcoinII Community Website"/>
-    <meta property="og:image" content="https://bitcoiniicore.org/banner2.png"/>
-    <meta property="og:image:type" content="image/png"/>
-    <meta property="og:image:width" content="500"/>
-    <meta property="og:image:height" content="125"/>
-    <meta property="og:description" content="The BitcoinII Community Website"/>
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@bitcoinII">
-    <meta name="twitter:creator" content="@bitcoinII">
-    <meta name="twitter:title" content="BitcoinII (BC2)">
-    <meta name="twitter:description" content="The BitcoinII Community Website"/>
-    <meta name="twitter:image" content="https://bitcoiniicore.org/banner2.png"/>
-    <meta name="twitter:domain" content="bitcoiniicore.org">
-
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="shortcut icon" href="favicon.ico">
-    <link id="canonical" rel="canonical" href="https://bitcoiniicore.org">
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="msapplication-TileColor" content="#000000">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bitcoin II — Second Chance Dashboard</title>
+    <meta
+      name="description"
+      content="Live Bitcoin II (BC2) dashboard with price telemetry, halving progress, block feed, market listings, and curated community resources."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(-45deg, #000000, #111111, #222222, #000000);
-            background-size: 400% 400%;
-            animation: gradientMove 30s ease infinite;
-            color: #e5e5e5;
-            overflow-x: hidden;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(#ffffff11 1px, transparent 1px);
-            background-size: 3px 3px;
-            pointer-events: none;
-            animation: twinkle 5s ease-in-out infinite, moveBackground 60s linear infinite;
-            z-index: -1;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 4px);
-            pointer-events: none;
-            animation: moveBackground 60s linear infinite;
-            opacity: 0.1;
-            mix-blend-mode: overlay;
-            z-index: -1;
-        }
-        body.light {
-            background: linear-gradient(-45deg, #ffffff, #f0f0ff, #ffffff, #e0e0f5);
-            background-size: 400% 400%;
-            animation: gradientMove 30s ease infinite;
-            color: #000000;
-        }
-        body.light::before {
-            animation: twinkle 5s ease-in-out infinite, moveBackground 60s linear infinite;
-            background: radial-gradient(#00000022 1px, transparent 1px);
-        }
-        body.light::after {
-            background: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 4px);
-            animation: moveBackground 60s linear infinite;
-        }
-        body.loading {
-            overflow: hidden;
-        }
-        @keyframes twinkle {
-            0%,100% { opacity: 0.2; }
-            50% { opacity: 0.6; }
-        }
-        @keyframes moveBackground { from { background-position: 0 0; } to { background-position: 200px 200px; } }
-        #loading-screen {
-            background: radial-gradient(circle at center, #161616, #000);
-            transition: opacity 1s ease, transform 1s ease;
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        #loading-screen.fade-out {
-            opacity: 0;
-            transform: scale(0.9);
-            pointer-events: none;
-        }
-        #loading-screen::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(#ffffff44 1px, transparent 1px);
-            background-size: 6px 6px;
-            animation: twinkle 1.5s ease-in-out infinite, rotateStars 80s linear infinite;
-            pointer-events: none;
-        }
-        @keyframes rotateStars { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        #loading-logo {
-            width: 120px;
-            height: 120px;
-            animation: bounceIn 2.5s ease forwards;
-            opacity: 0;
-        }
-        @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); } }
-        #loading-bar {
-            width: 70%;
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 9999px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        #loading-bar-inner {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(to right, #f7931a, #ffc65a);
-            background-image: linear-gradient(45deg, rgba(255,255,255,0.3) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.3) 75%, transparent 75%, transparent);
-            background-size: 1rem 1rem;
-            border-radius: 9999px;
-        }
-        #loading-bar-inner.start {
-            animation: loadingProgress 1.5s linear forwards, moveStripe 1s linear infinite, pulseBar 1s ease-in-out infinite;
-        }
-        #loading-percent {
-            text-shadow: 0 0 6px rgba(0,0,0,0.4);
-        }
-        @keyframes pulseBar { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.2); } }
-        @keyframes loadingProgress { from { width: 0%; } to { width: 100%; } }
-        @keyframes moveStripe { from { background-position: 0 0; } to { background-position: 1rem 0; } }
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-spin-slow { animation: spinSlow 8s linear infinite; }
-        .spotlight {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.1) 0%, rgba(247, 147, 26, 0) 70%);
-            pointer-events: none;
-            z-index: 100;
-            transform: translate(-50%, -50%);
-            transition: background 0.2s ease;
-        }
-        .glass-effect {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-        }
-        body.light .glass-effect {
-            background: rgba(255, 255, 255, 0.6);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        .hero-gradient {
-            background: radial-gradient(ellipse at 50% -10%, rgba(247, 147, 26, 0.3) 0%, rgba(10, 10, 10, 0) 60%), linear-gradient(120deg, rgba(255,255,255,0.05), transparent);
-            position: relative;
-            overflow: hidden;
-        }
-        #particle-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            transition: transform 0.2s ease-out;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-        .btn-primary {
-            background-image: linear-gradient(to right, #f7931a, #f9a84a);
-            color: #000000;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: none;
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 25px rgba(247, 147, 26, 0.25);
-        }
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid #f7931a;
-            color: #f7931a;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background-color: #f7931a;
-            color: #0a0a0a;
-            box-shadow: 0 0 20px rgba(247, 147, 26, 0.4);
-        }
-
-        .stat-card {
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        
-        /* Flip Card */
-        .flip-card {
-            perspective: 1000px;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.5rem;
-            transition: all 0.4s ease;
-        }
-        .flip-card:hover {
-            transform: translateY(-8px);
-            border-color: #f7931a;
-            box-shadow: 0 0 20px rgba(247, 147, 26, 0.2);
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
-        }
-        .flip-card-front::after {
-            content: '\f021'; /* Font Awesome refresh icon */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            color: rgba(255,255,255,0.2);
-            transition: all 0.3s ease;
-        }
-        .flip-card:hover .flip-card-front::after {
-            color: #f7931a;
-            transform: rotate(180deg);
-        }
-        .flip-card-back {
-            transform: rotateY(180deg);
-            font-size: 0.9rem;
-            text-align: center;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 10px 10px;
-        }
-
-        /* Mobile Menu Styling */
-        .mobile-nav {
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        .mobile-nav.open {
-            transform: translateX(0);
-        }
-        /* Scroll Animation */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .scroll-reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        #coin-canvas-container {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #coin-canvas-container::before {
-            content: '';
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.3) 0%, rgba(247, 147, 26, 0) 70%);
-            border-radius: 50%;
-            z-index: -1;
-            animation: pulse 4s infinite ease-in-out;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.7; }
-        }
-        #coin-canvas {
-            width: 300px !important;
-            height: 300px !important;
-            cursor: grab;
-        }
-        #coin-canvas:active {
-            cursor: grabbing;
-        }
-        .hero-title {
-            background: linear-gradient(45deg, #f7931a, #ffc65a, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(247, 147, 26, 0.5);
-            animation: float 6s ease-in-out infinite;
-        }
-        body.light .hero-title {
-            background: none;
-            -webkit-text-fill-color: #000000;
-            text-shadow: none;
-        }
-        .terminal-window {
-            background-color: #0D1117;
-            border: 1px solid #30363D;
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        body.light .terminal-window {
-            background-color: #f5f5f5;
-            border-color: #ddd;
-        }
-        .terminal-header {
-            background-color: #161B22;
-            padding: 0.5rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        body.light .terminal-header {
-            background-color: #eee;
-        }
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .code-block {
-            padding: 1.5rem;
-            position: relative;
-        }
-        .copy-btn {
-            position: absolute;
-            top: 1.25rem;
-            right: 1.25rem;
-            background-color: #21262D;
-            border: 1px solid #30363D;
-            color: #C9D1D9;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .copy-btn:hover {
-            background-color: #30363D;
-            border-color: #8B949E;
-        }
-        body.light .copy-btn {
-            background-color: #f0f0f0;
-            border-color: #ccc;
-            color: #333;
-        }
-        body.light .copy-btn:hover {
-            background-color: #e0e0e0;
-            border-color: #bbb;
-        }
-        .social-icon:hover {
-            animation: bounce 0.6s ease;
-        }
-        body.light .social-icon {
-            color: #555;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
-        }
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        @keyframes float {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .nav-link:hover, .nav-link.active {
-            color: #f7931a;
-            text-shadow: 0 0 8px rgba(247, 147, 26, 0.7);
-        }
-        body.light .nav-link {
-            color: #000000;
-        }
-        body.light .text-white {
-            color: #000000 !important;
-        }
-        body.light .text-gray-400 {
-            color: #000000 !important;
-        }
-        body.light .text-gray-300,
-        body.light .text-gray-500 {
-            color: #000000 !important;
-        }
-        #back-to-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: #f7931a;
-            color: #0a0a0a;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
-            z-index: 50;
-        }
-        #back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        #back-to-top:hover {
-            transform: scale(1.1);
-        }
-        #theme-toggle i {
-            transition: transform 0.3s;
-        }
-        #theme-toggle:hover i {
-            transform: rotate(20deg);
-        }
-    </style>
-</head>
-<body class="antialiased loading">
-    <div id="loading-screen" class="fixed inset-0 flex flex-col items-center justify-center text-white z-50 opacity-100">
-        <img src="logo.png" alt="Bitcoin II Logo" id="loading-logo" class="mb-4">
-        <h1 class="font-orbitron text-4xl mb-2 tracking-widest">Bitcoin II</h1>
-        <p id="loading-hint" class="text-gray-400 text-lg px-6 text-center"></p>
-        <div id="loading-bar" class="mt-6">
-            <div id="loading-bar-inner"></div>
-        </div>
-        <span id="loading-percent" class="font-orbitron text-lg mt-2">0%</span>
-    </div>
-    <div class="spotlight"></div>
-
-    <!-- Header -->
-    <header class="fixed w-full top-0 z-50 glass-effect">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="/" class="text-xl font-bold text-white z-50 flex items-center space-x-3">
-                <img src="logo.png" alt="Bitcoin II Logo" class="h-12 w-12 rounded-full">
-                <span>Bitcoin II</span>
-            </a>
-            <div id="desktop-nav" class="hidden md:flex items-center space-x-8">
-                <a href="#about" class="nav-link text-gray-300 hover:text-amber-500 transition">Discover</a>
-                <a href="#explorer" class="nav-link text-gray-300 hover:text-amber-500 transition">Explorer</a>
-                <a href="#tech" class="nav-link text-gray-300 hover:text-amber-500 transition">Tech Specs</a>
-                <!-- <a href="#mining" class="nav-link text-gray-300 hover:text-amber-500 transition">Mining</a> -->
-                <a href="#community" class="nav-link text-gray-300 hover:text-amber-500 transition">Community</a>
-                <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank" class="nav-link text-gray-300 hover:text-amber-500 transition">NodeMap</a>
-                <a href="BitcoinII_Whitepaper.pdf" target="_blank" class="nav-link text-gray-300 hover:text-amber-500 transition">Whitepaper</a>
-            </div>
-            <div class="flex items-center space-x-4">
-                <a href="https://play.google.com/store/apps/details?id=network.bitcoinii.bluewallet" target="_blank" rel="noopener noreferrer" class="hidden md:block btn-primary font-bold py-2 px-6 rounded-lg" style="background:none">
-                    <img src="google_store.png" style="width:150px">
-                </a>
-                <button id="theme-toggle" aria-label="Toggle theme" class="text-white focus:outline-none text-xl">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none z-50">
-                    <i id="menu-icon" class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Mobile Navigation -->
-    <div id="mobile-menu" class="mobile-nav fixed top-0 right-0 h-full w-full sm:w-64 glass-effect z-40 pt-24 p-8">
-        <a href="#about" class="block text-white text-lg py-3 hover:text-amber-500 transition">Discover</a>
-        <a href="#explorer" class="block text-white text-lg py-3 hover:text-amber-500 transition">Explorer</a>
-        <a href="#tech" class="block text-white text-lg py-3 hover:text-amber-500 transition">Tech Specs</a>
-        <!-- <a href="#mining" class="block text-white text-lg py-3 hover:text-amber-500 transition">Mining</a> -->
-        <a href="#community" class="block text-white text-lg py-3 hover:text-amber-500 transition">Community</a>
-        <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank" class="block text-white text-lg py-3 hover:text-amber-500 transition">NodeMap</a>
-        <a href="BitcoinII_Whitepaper.pdf" target="_blank" class="block text-white text-lg py-3 hover:text-amber-500 transition">Whitepaper</a>
-        <a href="https://play.google.com/store/apps/details?id=network.bitcoinii.bluewallet" target="_blank" rel="noopener noreferrer" class="mt-6 block btn-primary text-center font-bold py-3 px-6 rounded-lg" style="background:none">
-            <img src="google_store.png" style="width:150px">
-        </a>
-    </div>
-
-    <!-- Hero Section -->
-    <main id="home" class="hero-gradient pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        <canvas id="particle-canvas"></canvas>
-        <div class="container mx-auto px-6 text-center hero-content">
-            <h1 class="hero-title text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
-                What if you had a second chance?
-            </h1>
-            <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10">
-                Satoshi Nakamoto is often credited with saying, "It might make sense to get some in case it catches on." Many people wish they could have been mining Bitcoin since 2009. Absent a working time machine, this is the best chance at a second chance that we can provide.
-            </p>
-            <div class="flex justify-center space-x-4">
-                <a href="https://github.com/Bitcoin-II/BitcoinII-Core" target="_blank" rel="noopener noreferrer" class="btn-primary font-bold py-3 px-8 rounded-lg text-lg">Get Started</a>
-                <a href="#about" class="btn-secondary font-bold py-3 px-8 rounded-lg text-lg">Learn More</a>
-            </div>
-        </div>
-    </main>
-    
-    <!-- Live Stats Section -->
-<!--
-     <section id="stats" class="py-12 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-center">
-                <div class="stat-card p-6 rounded-lg glass-effect text-center w-full max-w-xs">
-                    <p class="text-gray-400 text-lg">Current Price</p>
-                    <p class="text-4xl md:text-5xl font-bold text-white my-2">$<span class="animate-number" data-target="0.01">0.00</span></p>
-                    <p class="text-xs text-gray-500 mt-2">Tuesday, July 8, 2025 at 10:20 PM BST</p>
-                </div>
-            </div>
-        </div>
-    </section>
--->
-     <section id="stats" class="py-12 scroll-reveal">
-       <div class="container mx-auto px-6">
-         <div class="flex justify-center">
-           <div class="stat-card p-6 rounded-lg glass-effect text-center w-full max-w-xs">
-             <p class="text-gray-400 text-lg">Current Price</p>
-             <p class="text-4xl md:text-5xl font-bold text-white my-2">
-               $<span id="live-price">0.00</span>
-             </p>
-             <p id="price-timestamp" class="text-xs text-gray-500 mt-2">Loading timestamp...</p>
-           </div>
-         </div>
-       </div>
-     </section>
-
-    <!-- Explorer Section -->
-    <section id="explorer" class="py-20 bg-black bg-opacity-20 scroll-reveal">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold text-white">Blockchain Explorer</h2>
-            <p class="text-gray-400 mt-4 mb-10 max-w-2xl mx-auto">View transactions, blocks, and network statistics in real-time on the Bitcoin II blockchain.</p>
-            <a href="https://bitcoinii.space" target="_blank" rel="noopener noreferrer" class="btn-primary font-bold py-3 px-8 rounded-lg text-lg">
-                <i class="fas fa-search mr-2"></i>Launch Explorer
-            </a>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white">Back to First Principles</h2>
-                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">A new Proof of Work cryptocurrency built purely on the founding principles of Satoshi Nakamoto's original Bitcoin protocol.</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h3 class="text-3xl font-bold text-white mb-4">A Sister Chain, Not a Competitor</h3>
-                    <p class="text-gray-400 mb-6">BitcoinII is built on the security principles and technology that has proven itself for the past 16 years. The intent is not to compete with, nor attempt to replace Bitcoin, but to become a "Sister Chain" that appeals to "Maxis" and "Newcomers" alike. We encourage people to continue to support Bitcoin and its developers. BitcoinII is offered as an accompaniment to their efforts.</p>
-                    <p class="text-gray-400">While Bitcoin (BTC) continues to be a long term investment vehicle, perhaps BitcoinII (BC2) can provide an instrument to be used more freely for day-to-day purchases, by implementing the same proven and familiar technology that millions around the world have grown to understand and trust.</p>
-                </div>
-                <div id="coin-canvas-container" class="p-8">
-                    <canvas id="coin-canvas"></canvas>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Tech Specs Section -->
-    <section id="tech" class="py-20 bg-black bg-opacity-20 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white">The Technology</h2>
-                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Familiar, proven, and secure. Click a card to flip for more info.</p>
-            </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-microchip text-amber-500 text-3xl mb-3"></i><strong class="text-lg">PoW Algorithm: SHA256</strong></div><div class="flip-card-back glass-effect"><p>Uses the same battle-tested hashing algorithm as Bitcoin, ensuring robust security and a proven track record.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-coins text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Max Supply: 21,000,000</strong></div><div class="flip-card-back glass-effect"><p>A fixed, finite supply, just like Bitcoin, guaranteeing scarcity and protecting against inflation.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-sync-alt text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Difficulty Retargeting</strong></div><div class="flip-card-back glass-effect"><p>The network difficulty adjusts every 2016 blocks, ensuring block times remain consistent as hashrate changes.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-chart-line text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Subsidy Halving</strong></div><div class="flip-card-back glass-effect"><p>The mining reward is cut in half every 210,000 blocks (~4 years), following Bitcoin's deflationary model.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-gavel text-amber-500 text-3xl mb-3"></i><strong class="text-lg">New Genesis Block</strong></div><div class="flip-card-back glass-effect"><p>BitcoinII starts with a brand new blockchain. It is not a fork of the existing Bitcoin chain, providing a fresh start for everyone.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-tachometer-alt text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Difficulty Restart at 1</strong></div><div class="flip-card-back glass-effect"><p>The mining difficulty began at the lowest possible level, opening up mining to standard consumer hardware from day one.</p></div></div></div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- How to Mine Section -->
-<!-- 
-    <section id="mining" class="py-20 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white">Start Mining Bitcoin II</h2>
-                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">With difficulty reset to 1, BitcoinII is well within the realm of being mineable with standard consumer grade CPUs.</p>
-            </div>
-            <div class="max-w-4xl mx-auto glass-effect p-8 rounded-lg">
-                <h3 class="text-2xl font-bold text-white mb-4">Recommended Software</h3>
-                <p class="text-gray-300 mb-4">We recommend using Pooler's "cpuminer", also known as "minerd". You can find the source code to compile yourself or pre-compiled binaries ready to run.</p>
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
-                    <a href="https://github.com/pooler/cpuminer" target="_blank" rel="noopener noreferrer" class="btn-secondary font-bold py-2 px-6 rounded-lg flex-1 text-center"><i class="fab fa-github mr-2"></i> Source Code</a>
-                    <a href="https://sourceforge.net/projects/cpuminer/" target="_blank" rel="noopener noreferrer" class="btn-secondary font-bold py-2 px-6 rounded-lg flex-1 text-center"><i class="fas fa-download mr-2"></i> Binaries</a>
-                </div>
-
-                <h3 class="text-2xl font-bold text-white mb-4">A Note on Hashrate</h3>
-                <p class="text-gray-300 mb-4">Today's modern machines have vastly superior hashrates compared to the equipment from the era in which Satoshi Nakamoto developed Bitcoin. It is recommended that miners exercise restraint when devoting hashpower to mining BitcoinII. Doing so may encourage faster mining adoption by the inexperienced, and help keep energy consumption low network-wide as the Difficulty Retargeting mechanism begins to adjust.</p>
-                
-                <h3 class="text-2xl font-bold text-white mb-4">Connect to the Network</h3>
-                <p class="text-gray-300 mb-2">Until more nodes come online and the DNS seed server populates, use the following command in BitcoinII-qt's RPC console to connect:</p>
-                <div class="terminal-window">
-                    <div class="terminal-header">
-                        <div class="terminal-dot" style="background:#ED6A5E;"></div>
-                        <div class="terminal-dot" style="background:#F4BF4F;"></div>
-                        <div class="terminal-dot" style="background:#61C554;"></div>
-                    </div>
-                    <div class="code-block">
-                        <span id="addnode-command">addnode bitcoinII.ddns.net:8338 add</span>
-                        <button class="copy-btn" onclick="copyCommand()">Copy</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
--->
-
-    <!-- Community Section -->
-    <section id="community" class="py-20 scroll-reveal">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold text-white">The Power of Community</h2>
-            <p class="text-gray-400 mt-4 mb-10 max-w-2xl mx-auto">The future is in your hands. The BitcoinII project needs volunteers: Node Operators, DNS Seed Server Operators, Miners, and more. If you would like to volunteer, reach out to us down below!</p>
-            <div class="flex justify-center items-center space-x-6 md:space-x-8">
-                <a href="https://discord.gg/bitcoinii" target="_blank" rel="noopener noreferrer" class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300"><i class="fab fa-discord text-5xl"></i></a>
-                <a href="https://x.com/TheBitcoinIIOrg" target="_blank" rel="noopener noreferrer"
-                   class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1227"
-                       class="w-12 h-12 fill-current">
-                    <path d="M752.12 496.59L1166.4 0H1061.5L707.38 429.25 428.72 0H0l437.36 651.37L0 1227h104.9l375.44-454.41L789.28 1227H1200z"/>
-                  </svg>
-                </a>
-                <a href="https://www.reddit.com/r/BitcoinII/" target="_blank" rel="noopener noreferrer" class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300"><i class="fab fa-reddit-alien text-5xl"></i></a>
-                <a href="https://t.me/BitcoinIIOrganization" target="_blank" rel="noopener noreferrer" class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300"><i class="fab fa-telegram text-5xl"></i></a>
-                <a href="https://github.com/Bitcoin-II" target="_blank" rel="noopener noreferrer" class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300"><i class="fab fa-github text-5xl"></i></a>
-                <a href="https://linktr.ee/BitcoinII" target="_blank" rel="noopener noreferrer"
-                   class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                       class="w-12 h-12 fill-current">
-                    <path d="M256 0c-17.67 0-32 14.33-32 32v189.72l-68.69-68.69c-12.5-12.5-32.76-12.5-45.25 0s-12.5 32.76 0 45.25L192 267.28V480c0 17.67 14.33 32 32 32s32-14.33 32-32V267.28l81.94-81.94c12.5-12.5 12.5-32.76 0-45.25s-32.76-12.5-45.25 0L256 221.72V32c0-17.67-14.33-32-32-32z"/>
-                  </svg>
-                </a>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-black py-12">
-        <div class="container mx-auto px-6 text-center text-gray-500">
-             <a href="#" class="inline-block mb-4">
-                <img src="logo.png" alt="Bitcoin II Logo" class="h-12 w-12 rounded-full">
-            </a>
-            <p>&copy; 2025 Bitcoin II. A Community Project.</p>
-        </div>
-    </footer>
-    
-    <a href="#home" id="back-to-top"><i class="fas fa-arrow-up"></i></a>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const select = (el, all = false) => {
-                if (typeof el !== 'string') return el;
-                el = el.trim();
-                return all ? [...document.querySelectorAll(el)] : document.querySelector(el);
-            };
-
-            const on = (type, el, listener, all = false) => {
-                const selectEl = select(el, all);
-                if (selectEl) {
-                    if (all && selectEl.forEach) {
-                        selectEl.forEach(e => e.addEventListener(type, listener));
-                    } else {
-                        selectEl.addEventListener(type, listener);
-                    }
-                }
-            };
-
-            const throttleRaf = (fn) => {
-                let ticking = false;
-                return function(...args) {
-                    if (!ticking) {
-                        requestAnimationFrame(() => {
-                            fn.apply(this, args);
-                            ticking = false;
-                        });
-                        ticking = true;
-                    }
-                };
-            };
-
-            // --- INITIALIZATION ---
-            initLoadingScreen();
-            initSpotlightEffect();
-            initScrollAnimations();
-            initNumberTicker();
-            initFlipCards();
-            init3dCoin();
-            initParticleEffect();
-            initParallaxEffect();
-            initMobileMenu();
-            initActiveNavOnScroll();
-            initBackToTopButton();
-            initThemeToggle();
-
-            // --- FUNCTION DEFINITIONS ---
-
-            function initLoadingScreen() {
-                document.body.classList.add('loading');
-                const hints = [
-                    'Use the theme button to switch modes.',
-                    'Double-click the coin to pause its spin.',
-                    'Tap a stat card to reveal numbers.',
-                    'Scroll to discover more features.',
-                    'Hover over cards for surprises.'
-                ];
-                const hintEl = select('#loading-hint');
-                hintEl.innerText = hints[Math.floor(Math.random() * hints.length)];
-
-                const hideScreen = () => {
-                    const screen = select('#loading-screen');
-                    if (!screen) return;
-                    screen.classList.add('fade-out');
-                    clearInterval(progressInterval);
-                    setTimeout(() => {
-                        screen.remove();
-                        document.body.classList.remove('loading');
-                    }, 1000);
-                };
-
-                let pageLoaded = document.readyState === 'complete';
-                let timerStarted = false;
-                const percentEl = select('#loading-percent');
-                let progressInterval;
-                const barInner = select('#loading-bar-inner');
-
-                const tryStart = () => {
-                    if (pageLoaded && !timerStarted) {
-                        timerStarted = true;
-                        if (barInner) {
-                            barInner.style.width = '50%'; // Instantly set to 50%
-                            setTimeout(() => {
-                                barInner.classList.add('start');  // Enable transition
-                                barInner.style.width = '100%';    // Animate to 100%
-                            }, 50); // Let browser apply initial width before transition
-                        }
-                        const start = Date.now();
-                        const duration = 1500; // 1.5 seconds
-                        const startPct = 50;
-                        const endPct = 100;
-                        progressInterval = setInterval(() => {
-                            const elapsed = Date.now() - start;
-                            const progress = Math.min(1, elapsed / duration);
-                            const pct = Math.round(startPct + (endPct - startPct) * progress);
-                            if (percentEl) percentEl.innerText = pct + '%';
-                            if (pct >= endPct) clearInterval(progressInterval);
-                        }, 50);
-                        setTimeout(hideScreen, duration + 0); // optional buffer
-                    }
-                };
-                if (pageLoaded) tryStart();
-                else window.addEventListener('load', () => {
-                    pageLoaded = true;
-                    tryStart();
-                });
-            }
-
-            function initSpotlightEffect() {
-                const spotlight = select('.spotlight');
-                let sx = 0, sy = 0, moving = false;
-                on('mousemove', window, (e) => {
-                    sx = e.clientX;
-                    sy = e.clientY;
-                    if (!moving) {
-                        moving = true;
-                        requestAnimationFrame(() => {
-                            spotlight.style.left = `${sx}px`;
-                            spotlight.style.top = `${sy}px`;
-                            moving = false;
-                        });
-                    }
-                });
-            }
-
-            function initScrollAnimations() {
-                const scrollObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                select('.scroll-reveal', true).forEach(el => scrollObserver.observe(el));
-            }
-
-            function initNumberTicker() {
-                const numberObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            animateNumber(entry.target);
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.8 });
-                select('.animate-number', true).forEach(el => numberObserver.observe(el));
-            }
-
-            function animateNumber(element) {
-                const target = parseFloat(element.getAttribute('data-target'));
-                const duration = 1500;
-                let start = 0;
-                const stepTime = 33;
-                const steps = duration / stepTime;
-                const increment = (target - start) / steps;
-                
-                const timer = setInterval(() => {
-                    start += increment;
-                    if (start >= target) {
-                        clearInterval(timer);
-                        start = target;
-                    }
-                    element.innerText = start.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                }, stepTime);
-            }
-
-            function initFlipCards() {
-                on('click', '.flip-card', (e) => {
-                    e.currentTarget.classList.toggle('flipped');
-                }, true);
-            }
-
-            function initMobileMenu() {
-                on('click', '#mobile-menu-button', () => {
-                    select('#mobile-menu').classList.toggle('open');
-                    select('#menu-icon').classList.toggle('fa-bars');
-                    select('#menu-icon').classList.toggle('fa-times');
-                });
-                on('click', '#mobile-menu a', () => {
-                    select('#mobile-menu').classList.remove('open');
-                    select('#menu-icon').classList.add('fa-bars');
-                    select('#menu-icon').classList.remove('fa-times');
-                }, true);
-            }
-            
-            function initActiveNavOnScroll() {
-                const sections = select('section', true);
-                const navLinks = select('#desktop-nav .nav-link', true);
-                
-                const update = () => {
-                    let current = 'home';
-                    sections.forEach(section => {
-                        const sectionTop = section.offsetTop;
-                        if (pageYOffset >= sectionTop - 150) {
-                            current = section.getAttribute('id');
-                        }
-                    });
-
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href').includes(current)) {
-                            link.classList.add('active');
-                        }
-                    });
-                };
-                on('scroll', window, throttleRaf(update));
-            }
-
-            function initBackToTopButton() {
-                const backToTopButton = select('#back-to-top');
-                const toggleBtn = () => {
-                    if (window.scrollY > 300) {
-                        backToTopButton.classList.add('visible');
-                    } else {
-                        backToTopButton.classList.remove('visible');
-                    }
-                };
-                on('scroll', window, throttleRaf(toggleBtn));
-            }
-
-            function initThemeToggle() {
-                const btn = select('#theme-toggle');
-                const icon = btn.querySelector('i');
-                const apply = (theme) => {
-                    document.body.classList.toggle('light', theme === 'light');
-                    icon.classList.toggle('fa-sun', theme === 'light');
-                    icon.classList.toggle('fa-moon', theme !== 'light');
-                    localStorage.setItem('theme', theme);
-                };
-                const saved = localStorage.getItem('theme');
-                if (saved) {
-                    apply(saved);
-                } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-                    apply('light');
-                }
-                btn.addEventListener('click', () => {
-                    const newTheme = document.body.classList.contains('light') ? 'dark' : 'light';
-                    apply(newTheme);
-                });
-            }
-
-            function init3dCoin() {
-                const coinCanvas = select('#coin-canvas');
-                if (!coinCanvas) return;
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ canvas: coinCanvas, alpha: true });
-                renderer.setSize(500, 500);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-
-                const geometry = new THREE.CylinderGeometry(5, 5, 0.35, 128);
-                const loader = new THREE.TextureLoader();
-                loader.crossOrigin = '';
-                const faceTexture = loader.load('logo3.png');
-
-                const materials = [
-                    new THREE.MeshStandardMaterial({ color: 0xf7931a, metalness: 0.8, roughness: 0.3 }),
-                    new THREE.MeshStandardMaterial({ map: faceTexture, metalness: 0.6, roughness: 0.4 }),
-                    new THREE.MeshStandardMaterial({ map: faceTexture, metalness: 0.6, roughness: 0.4 })
-                ];
-                const coin = new THREE.Mesh(geometry, materials);
-                scene.add(coin);
-
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-                scene.add(ambientLight);
-                const pointLight = new THREE.PointLight(0xffffff, 1);
-                pointLight.position.set(5, 15, 15);
-                scene.add(pointLight);
-                camera.position.z = 10;
-
-                let isDragging = false, rotationPaused = false, previousMousePosition = { x: 0, y: 0 };
-                on('mousedown', coinCanvas, () => { isDragging = true; });
-                on('mouseup', window, () => { isDragging = false; });
-                on('mouseleave', coinCanvas, () => { isDragging = false; coin.scale.set(1,1,1); });
-                on('mouseenter', coinCanvas, () => { coin.scale.set(1.1,1.1,1.1); });
-                on('mousemove', coinCanvas, (e) => {
-                    if (!isDragging) return;
-                    const deltaMove = { x: e.offsetX - previousMousePosition.x, y: e.offsetY - previousMousePosition.y };
-                    coin.rotation.y += deltaMove.x * 0.005;
-                    coin.rotation.x += deltaMove.y * 0.005;
-                    previousMousePosition = { x: e.offsetX, y: e.offsetY };
-                });
-                on('dblclick', coinCanvas, () => { rotationPaused = !rotationPaused; });
-
-                let lastCoinTime = 0;
-                const animateCoin = (t) => {
-                    requestAnimationFrame(animateCoin);
-                    if (t - lastCoinTime > 33) {
-                        if (!isDragging && !rotationPaused) {
-                            coin.rotation.y += 0.005;
-                            coin.rotation.x += 0.001;
-                        }
-                        renderer.render(scene, camera);
-                        lastCoinTime = t;
-                    }
-                }
-                animateCoin();
-            }
-
-            
-            function initParticleEffect() {
-                const particleCanvas = select('#particle-canvas');
-                if (!particleCanvas) return;
-                const pCtx = particleCanvas.getContext('2d');
-                let particles = [];
-                let mouse = { x: null, y: null, radius: 150 };
-
-                class Particle {
-                    constructor() {
-                        this.x = Math.random() * particleCanvas.width;
-                        this.y = Math.random() * particleCanvas.height;
-                        this.baseX = this.x;
-                        this.baseY = this.y;
-                        this.size = Math.random() * 2 + 1;
-                        this.density = (Math.random() * 30) + 1;
-                        this.color = 'rgba(247, 147, 26, 0.6)';
-                    }
-                    update() {
-                        let dx = mouse.x - this.x;
-                        let dy = mouse.y - this.y;
-                        let distance = Math.sqrt(dx * dx + dy * dy);
-                        if (distance < mouse.radius) {
-                            let force = (mouse.radius - distance) / mouse.radius;
-                            this.x -= (dx / distance) * force * this.density * 0.1;
-                            this.y -= (dy / distance) * force * this.density * 0.1;
-                        } else {
-                            if (this.x !== this.baseX) { this.x -= (this.x - this.baseX) / 10; }
-                            if (this.y !== this.baseY) { this.y -= (this.y - this.baseY) / 10; }
-                        }
-                    }
-                    draw() {
-                        pCtx.fillStyle = this.color;
-                        pCtx.beginPath();
-                        pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                        pCtx.fill();
-                    }
-                }
-
-                const resizeCanvas = () => {
-                    particleCanvas.width = particleCanvas.offsetWidth;
-                    particleCanvas.height = particleCanvas.offsetHeight;
-                    initParticles();
-                };
-                
-                function initParticles() {
-                    particles = [];
-                    let numberOfParticles = (particleCanvas.height * particleCanvas.width) / 12000;
-                    for (let i = 0; i < numberOfParticles; i++) {
-                        particles.push(new Particle());
-                    }
-                }
-
-                let lastTime = 0;
-                const animateParticles = (t) => {
-                    if (t - lastTime > 33) {
-                        pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-                        particles.forEach(p => { p.update(); p.draw(); });
-                        lastTime = t;
-                    }
-                    requestAnimationFrame(animateParticles);
-                }
-
-                resizeCanvas();
-                animateParticles();
-                on('resize', window, resizeCanvas);
-
-                const moveMouse = (e) => { mouse.x = e.clientX; mouse.y = e.clientY; };
-                on('mousemove', window, throttleRaf(moveMouse));
-                on('mouseout', window, () => { mouse.x = null; mouse.y = null; });
-            }
-
-            function initParallaxEffect() {
-                const particle = select('#particle-canvas');
-                if (!particle) return;
-                const handleScroll = () => {
-                    const offset = window.scrollY * 0.2;
-                    particle.style.transform = `translateY(${offset}px)`;
-                };
-                on('scroll', window, throttleRaf(handleScroll));
-            }
-
-            window.copyCommand = function() {
-                const commandText = select('#addnode-command').innerText;
-                const doCopy = (text) => {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = text;
-                    textarea.style.position = 'fixed';
-                    textarea.style.top = '-9999px';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                };
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(commandText);
-                } else {
-                    doCopy(commandText);
-                }
-
-                const btn = select('.copy-btn');
-                btn.innerText = 'Copied!';
-                setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
-            }
-        });
-    </script>
-
-    <script>
-    (function () {
-      function log(...args) {
-        console.log('[BC2]', ...args);
+      :root {
+        color-scheme: dark;
+        --page-max: 1100px;
+        --space-1: 0.35rem;
+        --space-2: 0.5rem;
+        --space-3: 0.75rem;
+        --space-4: 1rem;
+        --space-5: 1.5rem;
+        --space-6: 2rem;
+        --radius-sm: 0.75rem;
+        --radius-md: 1.25rem;
+        --radius-lg: 2rem;
+        --bg: radial-gradient(circle at 10% -10%, rgba(255, 190, 92, 0.12), transparent 55%),
+          radial-gradient(circle at 85% 20%, rgba(255, 206, 126, 0.16), transparent 60%),
+          linear-gradient(165deg, #070708 0%, #050506 55%, #020202 100%);
+        --surface: rgba(18, 18, 20, 0.9);
+        --surface-strong: rgba(23, 23, 26, 0.94);
+        --surface-soft: rgba(12, 12, 15, 0.74);
+        --border: rgba(247, 187, 78, 0.22);
+        --border-strong: rgba(247, 187, 78, 0.4);
+        --border-soft: rgba(247, 187, 78, 0.12);
+        --shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+        --text-strong: #fdf7e8;
+        --text-muted: rgba(255, 230, 186, 0.75);
+        --text-soft: rgba(255, 230, 186, 0.55);
+        --accent: #f5b63b;
+        --accent-soft: rgba(245, 182, 59, 0.18);
+        --accent-strong: #ffd98a;
+        --accent-gradient: linear-gradient(135deg, #ffe6a1, #f4b33a 55%, #c57a16);
+        --danger: #ff7a8b;
+        font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      async function updatePrice() {
-        const priceEl = document.getElementById('live-price');
-        const timeEl = document.getElementById('price-timestamp');
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
 
-        if (!priceEl || !timeEl) {
-          log(' Missing #live-price or #price-timestamp in DOM.');
-          return;
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text-strong);
+        font-family: inherit;
+        line-height: 1.55;
+        letter-spacing: 0.01em;
+        scroll-behavior: smooth;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body.nav-open {
+        overflow: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at 20% 0%, rgba(250, 200, 120, 0.08), transparent 45%),
+          radial-gradient(circle at 80% 20%, rgba(255, 221, 140, 0.06), transparent 55%),
+          linear-gradient(120deg, rgba(255, 196, 105, 0.08), rgba(0, 0, 0, 0));
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      a:hover,
+      a:focus-visible {
+        color: var(--accent-strong);
+      }
+
+      body.show-focus a:focus-visible,
+      body.show-focus button:focus-visible,
+      body.show-focus input:focus-visible,
+      body.show-focus select:focus-visible,
+      body.show-focus textarea:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      ::selection {
+        background: rgba(245, 182, 59, 0.4);
+        color: #110d04;
+      }
+
+      .page {
+        max-width: var(--page-max);
+        margin: 0 auto;
+        padding: var(--space-4) var(--space-4) var(--space-6);
+        position: relative;
+        z-index: 1;
+      }
+
+      .page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-lg);
+        background: linear-gradient(160deg, rgba(255, 214, 128, 0.04), rgba(0, 0, 0, 0));
+        pointer-events: none;
+        opacity: 0.9;
+      }
+
+      header.top-nav {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(18px);
+        background: rgba(6, 6, 7, 0.84);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-5);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        padding: var(--space-3) var(--space-4);
+        overflow: visible;
+      }
+
+      .nav-bar {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .brand-block {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        flex: 1 1 auto;
+      }
+
+      .brand-logo {
+        --tilt-x: 0deg;
+        --tilt-y: 0deg;
+        --glow-x: 50%;
+        --glow-y: 50%;
+        width: 52px;
+        height: 52px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at var(--glow-x) var(--glow-y), rgba(255, 204, 102, 0.3), transparent 60%),
+          rgba(20, 20, 24, 0.82);
+        border: 1px solid var(--border);
+        box-shadow: inset 0 0 0 1px rgba(255, 214, 128, 0.12), 0 18px 28px rgba(0, 0, 0, 0.48);
+        transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+      }
+
+      .brand-logo img {
+        width: 32px;
+        height: 32px;
+      }
+
+      .brand-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .brand-meta h1 {
+        font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+        margin: 0;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-meta p {
+        margin: 0;
+        color: var(--text-soft);
+        font-size: clamp(0.68rem, 2vw, 0.78rem);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .nav-toggle {
+        appearance: none;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-strong);
+        border-radius: var(--radius-sm);
+        padding: 0.45rem 0.75rem;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-toggle-icon {
+        display: grid;
+        gap: 4px;
+      }
+
+      .nav-toggle-icon span {
+        width: 20px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 999px;
+        display: block;
+      }
+
+      .explorer-launch {
+        position: relative;
+        display: grid;
+        grid-template-columns: auto;
+        gap: 0.45rem;
+        padding: 0.7rem 1.2rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: linear-gradient(140deg, rgba(34, 25, 10, 0.88), rgba(12, 9, 4, 0.82));
+        color: var(--text-strong);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.14em;
+        box-shadow: inset 0 0 0 1px rgba(255, 214, 128, 0.16), 0 24px 36px rgba(0, 0, 0, 0.55);
+        text-align: left;
+      }
+
+      .explorer-launch .launch-title {
+        font-weight: 600;
+        font-size: 0.8rem;
+      }
+
+      .explorer-status {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: var(--text-muted);
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.22);
+      }
+
+      .status-dot.is-live {
+        background: #7df7c6;
+        box-shadow: 0 0 10px rgba(125, 247, 198, 0.6);
+      }
+
+      .status-dot.is-offline {
+        background: var(--danger);
+        box-shadow: 0 0 10px rgba(255, 122, 139, 0.6);
+      }
+
+      .explorer-launch .launch-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        color: var(--text-soft);
+      }
+
+      .nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 6, 0.75);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 45;
+      }
+
+      header.top-nav.is-nav-open .nav-overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      nav#primary-navigation {
+        position: absolute;
+        top: calc(100% + var(--space-3));
+        left: 0;
+        right: 0;
+        display: grid;
+        gap: var(--space-2);
+        background: var(--surface);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        padding: var(--space-3);
+        box-shadow: var(--shadow);
+        max-height: min(70vh, 480px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-12px);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        z-index: 50;
+      }
+
+      nav#primary-navigation[aria-hidden="false"] {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      details.nav-dropdown {
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        background: var(--surface-strong);
+        padding: 0.6rem 0.85rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      }
+
+      details.nav-dropdown > summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--space-3);
+        padding: 0;
+      }
+
+      .nav-summary-text {
+        display: grid;
+        gap: 0.15rem;
+      }
+
+      .nav-summary-text .nav-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .nav-summary-text .nav-subtext {
+        font-size: 0.65rem;
+        color: var(--text-soft);
+        letter-spacing: 0.08em;
+      }
+
+      details.nav-dropdown > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      details.nav-dropdown > summary::after {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-right: 2px solid var(--accent);
+        border-bottom: 2px solid var(--accent);
+        transform: rotate(45deg);
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      details.nav-dropdown[open] > summary::after {
+        transform: rotate(-135deg);
+      }
+
+      .nav-dropdown-panel {
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-soft);
+      }
+
+      .nav-dropdown-panel ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .nav-dropdown-panel a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .nav-dropdown-panel a:hover,
+      .nav-dropdown-panel a:focus-visible {
+        color: var(--accent-strong);
+      }
+
+      main {
+        display: grid;
+        gap: var(--space-5);
+      }
+
+      .hero {
+        display: grid;
+        gap: var(--space-4);
+        position: relative;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: -30% 10% auto 5%;
+        height: 180%;
+        background: radial-gradient(circle at top, rgba(255, 201, 108, 0.08), transparent 65%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero-intro {
+        display: grid;
+        gap: var(--space-3);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        box-shadow: var(--shadow);
+        position: relative;
+        z-index: 1;
+      }
+
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+
+      .eyebrow--wide {
+        letter-spacing: 0.24em;
+      }
+
+      .hero-intro h2 {
+        margin: 0;
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        line-height: 1.1;
+      }
+
+      .hero-intro p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        align-items: center;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: 999px;
+        padding: 0.55rem 1.4rem;
+        font-size: 0.9rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border: 1px solid var(--border);
+      }
+
+      .btn.primary {
+        background: var(--accent-gradient);
+        color: #1b1205;
+        font-weight: 600;
+      }
+
+      .btn.ghost {
+        background: transparent;
+        color: var(--text-strong);
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        color: var(--text-soft);
+        font-size: 0.8rem;
+      }
+
+      .hero-panels {
+        display: grid;
+        gap: var(--space-3);
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-market {
+        display: grid;
+        gap: var(--space-3);
+        padding: var(--space-4);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        box-shadow: var(--shadow);
+        min-height: 100%;
+      }
+
+      .price-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--space-2);
+      }
+
+      .price-row strong {
+        font-size: clamp(1.6rem, 5vw, 2.2rem);
+      }
+
+      .change-label {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .change-label span {
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      .sparkline {
+        width: 100%;
+        min-height: 60px;
+        border-radius: var(--radius-sm);
+        background: rgba(255, 214, 128, 0.04);
+        border: 1px dashed rgba(255, 214, 128, 0.18);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      .hero-stats {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+
+      .quick-glance {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .quick-glance.section-card {
+        background: var(--surface);
+      }
+
+      .quick-glance-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: var(--space-2);
+      }
+
+      .quick-glance strong {
+        font-size: clamp(1.3rem, 4vw, 1.8rem);
+      }
+
+      .stat-tile {
+        background: var(--surface);
+        border-radius: var(--radius-sm);
+        padding: var(--space-3);
+        border: 1px solid var(--border-soft);
+        display: grid;
+        gap: 0.35rem;
+      }
+
+      .stat-tile span {
+        color: var(--text-soft);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+      }
+
+      .stat-tile strong {
+        font-size: 1rem;
+      }
+
+      .stat-tile small {
+        color: var(--text-muted);
+      }
+
+      .negative {
+        color: var(--danger);
+      }
+
+      .supply-grid {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      .section-card {
+        background: var(--surface-strong);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        padding: var(--space-4);
+        display: grid;
+        gap: var(--space-3);
+        box-shadow: var(--shadow);
+      }
+
+      .hero-intro.section-card {
+        background: var(--surface);
+      }
+
+      .section-heading {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--space-2);
+        align-items: baseline;
+        flex-wrap: wrap;
+      }
+
+      .section-heading h3 {
+        margin: 0;
+        font-size: clamp(1.05rem, 3vw, 1.3rem);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .section-subtitle {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: clamp(1.05rem, 3vw, 1.25rem);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .metric-title {
+        margin: 0;
+        font-size: clamp(1.2rem, 4vw, 1.5rem);
+        letter-spacing: 0.04em;
+      }
+
+      .metric-subtitle {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      .metric-details {
+        display: grid;
+        gap: 0.35rem;
+        margin-top: 0.75rem;
+      }
+
+      .progress-card {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255, 214, 128, 0.16);
+        overflow: hidden;
+      }
+
+      .progress-bar span {
+        display: block;
+        height: 100%;
+        background: var(--accent-gradient);
+        width: 0%;
+      }
+
+      .network-shell {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .network-summary {
+        display: grid;
+        gap: var(--space-3);
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        margin-top: var(--space-3);
+      }
+
+      .network-card {
+        background: var(--surface);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        padding: var(--space-3);
+        display: grid;
+        gap: 0.4rem;
+      }
+
+      .network-card span {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.75rem;
+        color: var(--text-soft);
+      }
+
+      .network-card strong {
+        font-size: 1.1rem;
+      }
+
+      .network-meta {
+        color: var(--text-soft);
+        font-size: 0.8rem;
+      }
+
+      .block-shell {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .block-feed-wrapper,
+      .follow-card {
+        background: var(--surface-strong);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        box-shadow: var(--shadow);
+      }
+
+      ul.block-feed {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      ul.block-feed li {
+        display: grid;
+        gap: 0.35rem;
+        background: rgba(12, 12, 15, 0.55);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        padding: var(--space-3);
+      }
+
+      .block-headline {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .block-meta {
+        color: var(--text-soft);
+        font-size: 0.8rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .follow-grid {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .follow-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: var(--space-2);
+      }
+
+      .follow-label {
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        color: var(--text-soft);
+        letter-spacing: 0.12em;
+      }
+
+      .markets-card {
+        background: var(--surface);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        padding: var(--space-4);
+        display: grid;
+        gap: var(--space-3);
+        box-shadow: var(--shadow);
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-soft);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 440px;
+      }
+
+      th,
+      td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+
+      thead {
+        background: rgba(255, 214, 128, 0.05);
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.75rem;
+      }
+
+      tbody tr + tr {
+        border-top: 1px solid var(--border-soft);
+      }
+
+      .trade-card {
+        background: var(--surface-strong);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        padding: var(--space-4);
+        display: grid;
+        gap: var(--space-3);
+        box-shadow: var(--shadow);
+      }
+
+      .trade-form {
+        display: grid;
+        gap: var(--space-3);
+      }
+
+      .input-group {
+        display: grid;
+        gap: 0.35rem;
+      }
+
+      label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--text-soft);
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        background: rgba(12, 12, 15, 0.9);
+        color: var(--text-strong);
+        font-size: 0.95rem;
+      }
+
+      .trade-meta {
+        display: grid;
+        gap: 0.5rem;
+        background: rgba(12, 12, 15, 0.55);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-sm);
+        padding: var(--space-3);
+      }
+
+      .help-text {
+        color: var(--text-soft);
+        font-size: 0.85rem;
+      }
+
+      .trade-note {
+        color: var(--text-soft);
+        font-size: 0.85rem;
+      }
+
+      .trade-meta-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+      }
+
+      footer {
+        margin-top: var(--space-6);
+        padding: var(--space-4);
+        border-top: 1px solid var(--border-soft);
+        color: var(--text-soft);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+
+      footer .footer-donate {
+        display: block;
+        margin-top: 0.4rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.04em;
+        color: var(--accent-strong);
+      }
+
+      @media (min-width: 720px) {
+        .page {
+          padding: var(--space-5) var(--space-6) var(--space-6);
         }
 
-        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoinii&vs_currencies=usd';
-        log('Fetching from:', url);
+        header.top-nav {
+          margin-bottom: var(--space-6);
+        }
 
-        try {
-          const res = await fetch(url);
-          log('Fetch status:', res.status);
+        nav#primary-navigation {
+          position: relative;
+          top: 0;
+          margin-top: var(--space-3);
+          max-height: none;
+          overflow: visible;
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+          transform: none;
+          transition: none;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
 
-          if (!res.ok) throw new Error('Non-200 response: ' + res.status);
+        .hero {
+          grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+          align-items: stretch;
+        }
 
-          const data = await res.json();
-          log('JSON:', data);
+        .hero-panels {
+          grid-template-columns: 1fr;
+        }
 
-          const rawPrice = data.bitcoinii?.usd;
-          log('Raw price from API:', rawPrice);
+        .block-shell {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 0.65fr);
+        }
 
-          const parsed = parseFloat(rawPrice);
-          if (isNaN(parsed)) {
-            throw new Error(' Parsed value is NaN: ' + rawPrice);
+        nav#primary-navigation[aria-hidden="true"],
+        nav#primary-navigation[aria-hidden="false"] {
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+          transform: none;
+        }
+      }
+
+      @media (min-width: 900px) {
+        header.top-nav {
+          display: grid;
+          gap: var(--space-3);
+          overflow: visible;
+        }
+
+        .nav-bar {
+          gap: var(--space-4);
+        }
+
+        .nav-toggle,
+        .nav-overlay {
+          display: none;
+        }
+
+        nav#primary-navigation {
+          position: relative;
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          padding: var(--space-2);
+          gap: var(--space-2);
+          border-radius: var(--radius-md);
+          border: 1px solid var(--border-soft);
+          background: linear-gradient(160deg, rgba(18, 16, 12, 0.82), rgba(8, 7, 6, 0.9));
+          backdrop-filter: blur(18px);
+          box-shadow: 0 22px 40px rgba(0, 0, 0, 0.5);
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+          transform: none;
+          transition: none;
+          max-height: none;
+          overflow: visible;
+        }
+
+        details.nav-dropdown {
+          position: relative;
+          height: 100%;
+          padding: var(--space-3);
+          background: linear-gradient(180deg, rgba(28, 24, 18, 0.9), rgba(12, 11, 9, 0.82));
+          border: 1px solid var(--border-soft);
+          box-shadow: inset 0 0 0 1px rgba(255, 214, 128, 0.08);
+        }
+
+        details.nav-dropdown:hover,
+        details.nav-dropdown:focus-within {
+          border-color: var(--border);
+          box-shadow: 0 18px 32px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 214, 128, 0.18);
+          transform: translateY(-2px);
+        }
+
+        .nav-dropdown-panel {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: calc(100% + var(--space-2));
+          margin-top: 0;
+          padding: var(--space-3);
+          border-top: none;
+          border: 1px solid var(--border);
+          border-radius: var(--radius-md);
+          background: rgba(12, 12, 15, 0.96);
+          box-shadow: 0 26px 48px rgba(0, 0, 0, 0.55);
+          opacity: 0;
+          transform: translateY(-6px);
+          transition: opacity 0.2s ease, transform 0.2s ease;
+          pointer-events: none;
+          z-index: 12;
+        }
+
+        details.nav-dropdown[open] .nav-dropdown-panel {
+          opacity: 1;
+          transform: translateY(0);
+          pointer-events: auto;
+        }
+
+        .nav-dropdown-panel ul {
+          gap: 0.45rem;
+        }
+
+        .nav-summary-text .nav-label {
+          font-size: 0.8rem;
+        }
+
+        .nav-summary-text .nav-subtext {
+          font-size: 0.62rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="top-nav">
+        <div class="nav-bar">
+          <div class="brand-block">
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">
+              <span class="nav-toggle-icon" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+              <span>Menu</span>
+            </button>
+            <span class="brand-logo">
+              <img src="Bitcoin2-logo-128.png" alt="Bitcoin II crest" />
+            </span>
+            <div class="brand-meta">
+              <h1>Bitcoin II</h1>
+              <p>The second chance protocol dashboard</p>
+            </div>
+          </div>
+          <a class="explorer-launch" href="https://bitcoinii.space/" target="_blank" rel="noreferrer">
+            <span class="launch-title">Launch explorer</span>
+            <span class="explorer-status">
+              <span class="status-dot" id="nav-explorer-dot" aria-hidden="true"></span>
+              <span id="nav-explorer-status">Syncing…</span>
+            </span>
+            <span class="launch-meta">
+              <span>Block <strong id="nav-height">--</strong></span>
+              <span id="nav-explorer-age">—</span>
+            </span>
+          </a>
+        </div>
+        <div class="nav-overlay" aria-hidden="true"></div>
+        <nav id="primary-navigation" aria-hidden="true" aria-label="Essential Bitcoin II resources">
+          <details class="nav-dropdown">
+            <summary>
+              <span class="nav-summary-text">
+                <span class="nav-label">General</span>
+                <span class="nav-subtext">Overview &amp; docs</span>
+              </span>
+            </summary>
+            <div class="nav-dropdown-panel">
+              <ul>
+                <li>
+                  <a href="https://coinpaprika.com/coin/bc2-bitcoin-ii/" target="_blank" rel="noreferrer"
+                    >CoinPaprika asset overview</a
+                  >
+                </li>
+                <li>
+                  <a href="https://github.com/Bitcoin-II/BitcoinII-Core" target="_blank" rel="noreferrer"
+                    >GitHub repository</a
+                  >
+                </li>
+                <li>
+                  <a href="https://bitcoinii.space/" target="_blank" rel="noreferrer">BC2 explorer</a>
+                </li>
+                <li>
+                  <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank" rel="noreferrer">Node map</a>
+                </li>
+                <li>
+                  <a href="https://bitcoinii.ddns.net/DailyReport.html" target="_blank" rel="noreferrer"
+                    >Daily network report</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </details>
+          <details class="nav-dropdown">
+            <summary>
+              <span class="nav-summary-text">
+                <span class="nav-label">Exchanges</span>
+                <span class="nav-subtext">Trade &amp; price</span>
+              </span>
+            </summary>
+            <div class="nav-dropdown-panel">
+              <ul>
+                <li>
+                  <a href="https://www.coinex.com/en/info/BC2" target="_blank" rel="noreferrer"
+                    >CoinEx — BC2 overview</a
+                  >
+                </li>
+                <li>
+                  <a href="https://rabid-rabbit.org/account/trade/BC2-USDT" target="_blank" rel="noreferrer"
+                    >Rabid Rabbit — BC2/USDT</a
+                  >
+                </li>
+                <li>
+                  <a href="https://trade.nestex.one/spot/BC2" target="_blank" rel="noreferrer">NestEX spot</a>
+                </li>
+                <li>
+                  <a href="https://klingex.io/trade/BC2-USDT" target="_blank" rel="noreferrer"
+                    >Kling Exchange — BC2/USDT</a
+                  >
+                </li>
+                <li>
+                  <a href="https://nonkyc.io/market/BC2_USDT" target="_blank" rel="noreferrer">nonKYC market</a>
+                </li>
+              </ul>
+            </div>
+          </details>
+          <details class="nav-dropdown">
+            <summary>
+              <span class="nav-summary-text">
+                <span class="nav-label">Wallets &amp; Tools</span>
+                <span class="nav-subtext">Store &amp; build</span>
+              </span>
+            </summary>
+            <div class="nav-dropdown-panel">
+              <ul>
+                <li>
+                  <a href="https://github.com/Bitcoin-II/BitcoinII-Core/releases" target="_blank" rel="noreferrer"
+                    >Core wallet (desktop)</a
+                  >
+                </li>
+                <li>
+                  <a href="https://wallet-bc2.nitopool.fr/" target="_blank" rel="noreferrer"
+                    >NitoPool hosted web wallet</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://play.google.com/store/apps/details?id=network.bitcoinii.bluewallet&hl=en_US"
+                    target="_blank"
+                    rel="noreferrer"
+                    >Android wallet by the organization</a
+                  >
+                </li>
+                <li>
+                  <a href="https://t.me/BitcoinIIOrganization" target="_blank" rel="noreferrer"
+                    >Wallet setup support (Telegram)</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </details>
+          <details class="nav-dropdown">
+            <summary>
+              <span class="nav-summary-text">
+                <span class="nav-label">Community</span>
+                <span class="nav-subtext">Connect &amp; support</span>
+              </span>
+            </summary>
+            <div class="nav-dropdown-panel">
+              <ul>
+                <li>
+                  <a href="https://discord.gg/bitcoinii" target="_blank" rel="noreferrer">Discord</a>
+                </li>
+                <li>
+                  <a href="https://t.me/BitcoinIIOrganization" target="_blank" rel="noreferrer">Telegram</a>
+                </li>
+                <li>
+                  <a href="https://www.reddit.com/r/BitcoinIIOfficial/" target="_blank" rel="noreferrer">Reddit</a>
+                </li>
+                <li>
+                  <a href="https://x.com/@TheBitcoinIIOrg" target="_blank" rel="noreferrer">X (Twitter)</a>
+                </li>
+              </ul>
+            </div>
+          </details>
+        </nav>
+      </header>
+      <main>
+        <section class="hero">
+          <div class="hero-intro section-card">
+            <p class="eyebrow">Live bc2 intelligence</p>
+            <h2>What if you had a second chance?</h2>
+            <p>
+              Stay on top of Bitcoin II with live price telemetry, halving momentum, and curated resources crafted for
+              the community. Built to feel premium on any screen.
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="https://github.com/Bitcoin-II" target="_blank" rel="noreferrer">Explore the project</a>
+              <a class="btn ghost" href="https://wallet-bc2.nitopool.fr/" target="_blank" rel="noreferrer">Open web wallet</a>
+            </div>
+            <div class="hero-meta">
+              <span id="market-as-of">CoinPaprika • syncing…</span>
+            </div>
+          </div>
+          <div class="hero-panels">
+            <div class="hero-market section-card">
+              <div class="price-row">
+                <strong id="live-price">--</strong>
+                <div class="change-label">
+                  <span id="live-change">--</span>
+                  <small>24h</small>
+                </div>
+              </div>
+              <div class="sparkline" id="mini-chart" aria-hidden="true"></div>
+              <div class="hero-stats">
+                <div class="stat-tile">
+                  <span>Market cap</span>
+                  <strong id="market-cap">--</strong>
+                </div>
+                <div class="stat-tile">
+                  <span>24h volume</span>
+                  <strong id="market-volume">--</strong>
+                </div>
+                <div class="stat-tile">
+                  <span>7d change</span>
+                  <strong id="market-change-7d">--</strong>
+                </div>
+                <div class="stat-tile">
+                  <span>Updated</span>
+                  <strong id="market-updated">—</strong>
+                </div>
+              </div>
+            </div>
+            <div class="quick-glance section-card">
+              <div class="quick-glance-header">
+                <div>
+                  <p class="eyebrow eyebrow--wide">Spot pulse</p>
+                  <strong id="side-price">--</strong>
+                </div>
+                <span id="side-change">--</span>
+              </div>
+              <div class="sparkline" id="side-mini" aria-hidden="true"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="progress-card section-card">
+          <div>
+            <p class="eyebrow">Circulation</p>
+            <h3 class="metric-title">
+              <span id="supply-minted">--</span>
+              <small class="metric-subtitle">Minted • <span id="supply-percent">--</span> of 21M</small>
+            </h3>
+          </div>
+          <div>
+            <p class="eyebrow">Halving trajectory</p>
+            <div class="progress-bar" role="progressbar" aria-labelledby="halving-progress-label">
+              <span id="halving-progress"></span>
+            </div>
+            <div class="metric-details">
+              <strong id="halving-progress-label">—</strong>
+              <span class="network-meta">Next reward drop at block <span id="next-halving-height">--</span></span>
+              <span class="network-meta">ETA <span id="halving-eta">—</span> • countdown <span id="halving-countdown">—</span></span>
+            </div>
+          </div>
+          <div class="supply-grid">
+            <div class="stat-tile">
+              <span>Current block reward</span>
+              <strong id="block-reward">--</strong>
+            </div>
+            <div class="stat-tile">
+              <span>Average block time</span>
+              <strong id="avg-block-time">--</strong>
+            </div>
+            <div class="stat-tile">
+              <span>Difficulty trend</span>
+              <strong id="difficulty-trend">--</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="network-shell">
+          <div class="block-shell">
+            <div class="block-feed-wrapper section-card">
+              <div class="network-meta" id="network-as-of">bitcoinii.space • syncing…</div>
+              <div class="network-summary">
+                <div class="network-card">
+                  <span>Height</span>
+                  <strong id="height">--</strong>
+                </div>
+                <div class="network-card">
+                  <span>Difficulty</span>
+                  <strong id="difficulty">--</strong>
+                </div>
+                <div class="network-card">
+                  <span>Last block</span>
+                  <strong id="last-block-time">--</strong>
+                </div>
+              </div>
+              <ul class="block-feed" id="block-list" aria-live="polite">
+                <li>Waiting for the latest blocks…</li>
+              </ul>
+            </div>
+            <aside class="follow-card section-card">
+              <h3 class="section-title">Block spotlight</h3>
+              <div class="follow-grid">
+                <div class="follow-row">
+                  <span class="follow-label">Height</span>
+                  <strong id="follow-height">--</strong>
+                </div>
+                <div class="follow-row">
+                  <span class="follow-label">Mined</span>
+                  <span id="follow-time">--</span>
+                </div>
+                <div class="follow-row">
+                  <span class="follow-label">Transactions</span>
+                  <span id="follow-tx">--</span>
+                </div>
+                <div class="follow-row">
+                  <span class="follow-label">Miner</span>
+                  <span id="follow-miner">--</span>
+                </div>
+                <div class="follow-row">
+                  <span class="follow-label">Reward</span>
+                  <span id="follow-reward">--</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="markets-card section-card">
+          <div class="section-heading">
+            <h3>Active markets</h3>
+            <span class="section-subtitle">See also the Exchanges menu for direct trading venues.</span>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Exchange</th>
+                  <th scope="col">Pair</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">24h volume</th>
+                </tr>
+              </thead>
+              <tbody id="markets-body">
+                <tr>
+                  <td colspan="4">Loading market data…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="trade-card section-card">
+          <h3 class="section-title">Trade impact estimator</h3>
+          <form id="trade-form" class="trade-form">
+            <div class="input-group">
+              <label for="trade-amount">Amount (BC2)</label>
+              <input id="trade-amount" type="number" min="0" step="0.01" placeholder="50" />
+            </div>
+            <div class="input-group">
+              <label for="trade-side">Order side</label>
+              <select id="trade-side">
+                <option value="buy">Buy</option>
+                <option value="sell">Sell</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="trade-slippage">Expected impact (%)</label>
+              <input id="trade-slippage" type="number" step="0.01" value="0.5" />
+              <small class="help-text">Impact reference <span id="trade-impact">--</span></small>
+            </div>
+            <button class="btn primary" type="submit">Estimate order</button>
+          </form>
+          <div class="trade-meta">
+            <div class="trade-meta-row">
+              <span>Spot price</span>
+              <strong id="trade-price">--</strong>
+            </div>
+            <div class="trade-meta-row">
+              <span>Fill price</span>
+              <strong id="trade-fill">--</strong>
+            </div>
+            <div class="trade-meta-row">
+              <span>Order total</span>
+              <strong id="trade-total">--</strong>
+            </div>
+            <div class="trade-meta-row">
+              <span>Delta</span>
+              <strong id="trade-delta">--</strong>
+            </div>
+            <div class="trade-note" id="trade-status">Waiting for live price data…</div>
+          </div>
+        </section>
+
+      </main>
+      <footer>
+        <div>
+          © BC2 Protocol — Data sourced from CoinPaprika &amp; bitcoinii.space.
+          <span class="footer-donate">Support the devs: bc1qql0g04twdg8l9f7tfvvekzj5yf58y6la6tpet5</span>
+        </div>
+      </footer>
+    </div>
+    <script>
+      (function () {
+        const dom = {
+          price: document.getElementById("live-price"),
+          change: document.getElementById("live-change"),
+          sidePrice: document.getElementById("side-price"),
+          sideChange: document.getElementById("side-change"),
+          volume: document.getElementById("market-volume"),
+          cap: document.getElementById("market-cap"),
+          change7d: document.getElementById("market-change-7d"),
+          updated: document.getElementById("market-updated"),
+          height: document.getElementById("height"),
+          difficulty: document.getElementById("difficulty"),
+          lastBlock: document.getElementById("last-block-time"),
+          blockList: document.getElementById("block-list"),
+          chart: document.getElementById("mini-chart"),
+          sideMini: document.getElementById("side-mini"),
+          navHeight: document.getElementById("nav-height"),
+          navExplorerAge: document.getElementById("nav-explorer-age"),
+          navExplorerStatus: document.getElementById("nav-explorer-status"),
+          navExplorerDot: document.getElementById("nav-explorer-dot"),
+          marketAsOf: document.getElementById("market-as-of"),
+          networkAsOf: document.getElementById("network-as-of"),
+          blockReward: document.getElementById("block-reward"),
+          supplyMinted: document.getElementById("supply-minted"),
+          supplyPercent: document.getElementById("supply-percent"),
+          halvingProgressLabel: document.getElementById("halving-progress-label"),
+          halvingProgress: document.getElementById("halving-progress"),
+          nextHalvingHeight: document.getElementById("next-halving-height"),
+          halvingEta: document.getElementById("halving-eta"),
+          halvingCountdown: document.getElementById("halving-countdown"),
+          avgBlockTime: document.getElementById("avg-block-time"),
+          difficultyTrend: document.getElementById("difficulty-trend"),
+          marketsBody: document.getElementById("markets-body"),
+          tradeForm: document.getElementById("trade-form"),
+          tradeAmount: document.getElementById("trade-amount"),
+          tradeSide: document.getElementById("trade-side"),
+          tradeSlippage: document.getElementById("trade-slippage"),
+          tradeImpact: document.getElementById("trade-impact"),
+          tradePrice: document.getElementById("trade-price"),
+          tradeFill: document.getElementById("trade-fill"),
+          tradeTotal: document.getElementById("trade-total"),
+          tradeDelta: document.getElementById("trade-delta"),
+          tradeStatus: document.getElementById("trade-status"),
+          followHeight: document.getElementById("follow-height"),
+          followTime: document.getElementById("follow-time"),
+          followTx: document.getElementById("follow-tx"),
+          followMiner: document.getElementById("follow-miner"),
+          followReward: document.getElementById("follow-reward"),
+        };
+
+        const header = document.querySelector("header.top-nav");
+        const nav = document.getElementById("primary-navigation");
+        const navToggle = document.querySelector(".nav-toggle");
+        const navOverlay = header ? header.querySelector(".nav-overlay") : null;
+        const navDropdowns = nav ? Array.from(nav.querySelectorAll("details.nav-dropdown")) : [];
+        const desktopDropdownHandlers = new Map();
+        const dropdownCloseTimers = new WeakMap();
+
+        const cancelScheduledClose = (dropdown) => {
+          if (!dropdown) return;
+          const timer = dropdownCloseTimers.get(dropdown);
+          if (timer) {
+            clearTimeout(timer);
+            dropdownCloseTimers.delete(dropdown);
           }
+        };
 
-          priceEl.textContent = parsed.toFixed(3);
+        const scheduleClose = (dropdown) => {
+          if (!dropdown) return;
+          cancelScheduledClose(dropdown);
+          const timer = setTimeout(() => {
+            dropdown.removeAttribute("open");
+            dropdownCloseTimers.delete(dropdown);
+          }, 180);
+          dropdownCloseTimers.set(dropdown, timer);
+        };
+        const mobileQuery =
+          typeof window !== "undefined" && typeof window.matchMedia === "function"
+            ? window.matchMedia("(max-width: 780px)")
+            : {
+                matches: false,
+                addEventListener: null,
+                addListener: null,
+              };
 
-          const now = new Date();
-          timeEl.textContent = now.toLocaleString('en-GB', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZoneName: 'short'
+        const openDesktopDropdown = (dropdown) => {
+          if (!dropdown) return;
+          cancelScheduledClose(dropdown);
+          navDropdowns.forEach((other) => {
+            if (other !== dropdown) other.removeAttribute("open");
+          });
+          dropdown.setAttribute("open", "");
+        };
+
+        const closeDesktopDropdown = (dropdown) => {
+          if (!dropdown) return;
+          cancelScheduledClose(dropdown);
+          dropdown.removeAttribute("open");
+        };
+
+        const bindDesktopDropdown = (dropdown) => {
+          if (!dropdown || desktopDropdownHandlers.has(dropdown)) return;
+          const handleEnter = () => {
+            if (mobileQuery.matches) return;
+            cancelScheduledClose(dropdown);
+            openDesktopDropdown(dropdown);
+          };
+          const handleLeave = () => {
+            if (mobileQuery.matches) return;
+            scheduleClose(dropdown);
+          };
+          const handleFocusIn = () => {
+            if (mobileQuery.matches) return;
+            cancelScheduledClose(dropdown);
+            openDesktopDropdown(dropdown);
+          };
+          const handleFocusOut = () => {
+            if (mobileQuery.matches) return;
+            const raf =
+              typeof window !== "undefined" && typeof window.requestAnimationFrame === "function"
+                ? window.requestAnimationFrame.bind(window)
+                : (cb) => setTimeout(cb, 16);
+            raf(() => {
+              if (!dropdown.contains(document.activeElement)) {
+                scheduleClose(dropdown);
+              }
+            });
+          };
+          dropdown.addEventListener("mouseenter", handleEnter);
+          dropdown.addEventListener("mouseleave", handleLeave);
+          dropdown.addEventListener("focusin", handleFocusIn);
+          dropdown.addEventListener("focusout", handleFocusOut);
+          desktopDropdownHandlers.set(dropdown, {
+            handleEnter,
+            handleLeave,
+            handleFocusIn,
+            handleFocusOut,
+          });
+        };
+
+        const unbindDesktopDropdown = (dropdown) => {
+          if (!dropdown || !desktopDropdownHandlers.has(dropdown)) return;
+          const handlers = desktopDropdownHandlers.get(dropdown);
+          dropdown.removeEventListener("mouseenter", handlers.handleEnter);
+          dropdown.removeEventListener("mouseleave", handlers.handleLeave);
+          dropdown.removeEventListener("focusin", handlers.handleFocusIn);
+          dropdown.removeEventListener("focusout", handlers.handleFocusOut);
+          cancelScheduledClose(dropdown);
+          desktopDropdownHandlers.delete(dropdown);
+        };
+
+        const refreshDropdownBindings = () => {
+          if (!navDropdowns.length) return;
+          if (mobileQuery.matches) {
+            navDropdowns.forEach((dropdown) => {
+              unbindDesktopDropdown(dropdown);
+              closeDesktopDropdown(dropdown);
+            });
+          } else {
+            navDropdowns.forEach((dropdown) => bindDesktopDropdown(dropdown));
+          }
+        };
+
+        const setNavOpen = (open) => {
+          if (!header || !navToggle) return;
+          header.classList.toggle("is-nav-open", open);
+          document.body.classList.toggle("nav-open", open && mobileQuery.matches);
+          navToggle.setAttribute("aria-expanded", String(open));
+          if (nav) {
+            const shouldHide = mobileQuery.matches && !open;
+            nav.setAttribute("aria-hidden", shouldHide ? "true" : "false");
+          }
+          if (!open && mobileQuery.matches) {
+            navDropdowns.forEach((dropdown) => dropdown.removeAttribute("open"));
+          }
+        };
+
+        const handleViewportChange = (event) => {
+          if (event.matches) {
+            setNavOpen(false);
+          } else {
+            document.body.classList.remove("nav-open");
+            if (navToggle) {
+              navToggle.setAttribute("aria-expanded", "false");
+            }
+            if (header) {
+              header.classList.remove("is-nav-open");
+            }
+          }
+          if (nav) {
+            nav.setAttribute("aria-hidden", event.matches ? "true" : "false");
+          }
+          refreshDropdownBindings();
+        };
+
+        if (navToggle && header) {
+          navToggle.addEventListener("click", () => {
+            const isExpanded = navToggle.getAttribute("aria-expanded") === "true";
+            setNavOpen(!isExpanded);
           });
 
-          log('Price and timestamp updated');
-        } catch (err) {
-          log('Error during fetch or update:', err);
-          priceEl.textContent = '--';
-          timeEl.textContent = 'Failed to fetch price';
+          if (navOverlay) {
+            navOverlay.addEventListener("click", () => {
+              setNavOpen(false);
+            });
+          }
+
+          document.addEventListener("click", (event) => {
+            if (!mobileQuery.matches) return;
+            if (!header.contains(event.target)) {
+              setNavOpen(false);
+            }
+          });
+
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+              setNavOpen(false);
+              if (mobileQuery.matches) {
+                navToggle.focus();
+              }
+            }
+          });
+
+          if (typeof mobileQuery.addEventListener === "function") {
+            mobileQuery.addEventListener("change", handleViewportChange);
+          } else if (typeof mobileQuery.addListener === "function") {
+            mobileQuery.addListener(handleViewportChange);
+          }
+
+          if (!mobileQuery.matches) {
+            navToggle.setAttribute("aria-expanded", "false");
+            header.classList.remove("is-nav-open");
+          }
         }
-      }
 
-      // Delay until absolutely everything is ready
-      window.addEventListener('load', () => {
-        log(' Page fully loaded. Starting price update...');
-        updatePrice();
-      });
-    })();
+        if (nav) {
+          nav.setAttribute("aria-hidden", mobileQuery.matches ? "true" : "false");
+        }
+
+        if (navDropdowns.length) {
+          navDropdowns.forEach((dropdown) => {
+            dropdown.addEventListener("toggle", () => {
+              if (!dropdown.open || !mobileQuery.matches) return;
+              navDropdowns.forEach((other) => {
+                if (other !== dropdown) other.removeAttribute("open");
+              });
+            });
+          });
+        }
+
+        refreshDropdownBindings();
+
+        if (nav) {
+          nav.addEventListener("click", (event) => {
+            if (!mobileQuery.matches) return;
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            const link = target.closest("a");
+            if (link) {
+              setNavOpen(false);
+            }
+          });
+        }
+
+        const brandLogo = document.querySelector(".brand-logo");
+        if (brandLogo) {
+          const setLogoTilt = (event) => {
+            const rect = brandLogo.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width;
+            const y = (event.clientY - rect.top) / rect.height;
+            const rotateX = (0.5 - y) * 16;
+            const rotateY = (x - 0.5) * 16;
+            brandLogo.style.setProperty("--tilt-x", `${rotateX.toFixed(2)}deg`);
+            brandLogo.style.setProperty("--tilt-y", `${rotateY.toFixed(2)}deg`);
+            brandLogo.style.setProperty("--glow-x", `${(x * 100).toFixed(2)}%`);
+            brandLogo.style.setProperty("--glow-y", `${(y * 100).toFixed(2)}%`);
+          };
+
+          const resetLogoTilt = () => {
+            brandLogo.style.setProperty("--tilt-x", "0deg");
+            brandLogo.style.setProperty("--tilt-y", "0deg");
+            brandLogo.style.setProperty("--glow-x", "50%");
+            brandLogo.style.setProperty("--glow-y", "50%");
+          };
+
+          resetLogoTilt();
+          brandLogo.addEventListener("pointermove", setLogoTilt);
+          brandLogo.addEventListener("pointerleave", resetLogoTilt);
+          brandLogo.addEventListener("pointerup", resetLogoTilt);
+        }
+
+        const API = {
+          ticker: "https://api.coinpaprika.com/v1/tickers/bc2-bitcoin-ii",
+          history: "https://api.coinpaprika.com/v1/tickers/bc2-bitcoin-ii/historical",
+          markets: "https://api.coinpaprika.com/v1/coins/bc2-bitcoin-ii/markets?quotes=USD",
+          blocks: "https://bitcoinii.space/api/blocks?limit=5",
+        };
+
+        const MAX_SUPPLY = 21_000_000;
+        const HALVING_INTERVAL = 210_000;
+        const INITIAL_REWARD = 50;
+
+        let historyLoaded = false;
+        let historyLoading = false;
+        let timers = [];
+        const state = {
+          lastPrice: null,
+          change24h: null,
+        };
+
+        const numberFormatter = new Intl.NumberFormat(undefined, {
+          maximumFractionDigits: 0,
+        });
+        const percentFormatter = new Intl.NumberFormat(undefined, {
+          maximumFractionDigits: 2,
+        });
+        const relativeFormatter =
+          typeof Intl !== "undefined" && Intl.RelativeTimeFormat
+            ? new Intl.RelativeTimeFormat(undefined, { numeric: "auto" })
+            : null;
+
+        function fetchJson(url, timeout = 10000) {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), timeout);
+          return fetch(url, { signal: controller.signal, cache: "no-store" })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`Status ${response.status}`);
+              }
+              return response.json();
+            })
+            .finally(() => clearTimeout(timer));
+        }
+
+        function renderSpark(el, series) {
+          if (!el || !Array.isArray(series) || series.length < 2) return;
+          const w = 200;
+          const h = 60;
+          const min = Math.min(...series);
+          const max = Math.max(...series);
+          const norm = (value) => ((value - min) / (max - min || 1)) * (h - 6) + 3;
+          const step = w / (series.length - 1);
+          let d = "M0 " + (h - norm(series[0]));
+          for (let i = 1; i < series.length; i++) {
+            d += " L " + i * step + " " + (h - norm(series[i]));
+          }
+          el.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><path d="${d}" fill="none" stroke="url(#g)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#00e0ff" stop-opacity="0.95"/><stop offset="1" stop-color="#00bcd7" stop-opacity="0.95"/></linearGradient></defs></svg>`;
+        }
+
+        function formatCurrency(value) {
+          if (!Number.isFinite(Number(value))) return "—";
+          const num = Number(value);
+          const opts = { maximumFractionDigits: num < 1 ? 6 : 2 };
+          return "$" + num.toLocaleString(undefined, opts);
+        }
+
+        function formatPercent(value) {
+          if (!Number.isFinite(Number(value))) return "—";
+          const num = Number(value);
+          const prefix = num > 0 ? "+" : "";
+          return prefix + num.toFixed(2) + "%";
+        }
+
+        function formatSignedPercent(value) {
+          if (!Number.isFinite(Number(value))) return "—";
+          const num = Number(value);
+          const prefix = num > 0 ? "+" : "";
+          return prefix + num.toFixed(2) + "%";
+        }
+
+        function applyChange(el, value) {
+          if (!el) return;
+          if (!Number.isFinite(Number(value))) {
+            el.textContent = "—";
+            el.classList.remove("negative");
+            return;
+          }
+          const num = Number(value);
+          el.textContent = formatPercent(num);
+          if (num < 0) {
+            el.classList.add("negative");
+          } else {
+            el.classList.remove("negative");
+          }
+        }
+
+        function formatNumber(value, options) {
+          if (!Number.isFinite(Number(value))) return "—";
+          return Number(value).toLocaleString(undefined, options);
+        }
+
+        function updateImpactLabel(value) {
+          if (!dom.tradeImpact) return;
+          const num = Number(value);
+          if (!Number.isFinite(num)) {
+            dom.tradeImpact.textContent = "—";
+            return;
+          }
+          const prefix = num > 0 ? "+" : "";
+          dom.tradeImpact.textContent = `${prefix}${num.toFixed(2)}%`;
+        }
+
+        function updateTradeSimulation() {
+          if (!dom.tradePrice || !dom.tradeAmount) return;
+          const price = Number(state.lastPrice);
+          const amountValue = Number(dom.tradeAmount.value);
+          const impactValue = Number(dom.tradeSlippage?.value ?? 0);
+          const side = dom.tradeSide?.value || "buy";
+
+          if (!Number.isFinite(price) || price <= 0) {
+            dom.tradePrice.textContent =
+              dom.tradeFill.textContent =
+              dom.tradeTotal.textContent =
+              dom.tradeDelta.textContent =
+                "—";
+            dom.tradeDelta?.classList.remove("negative");
+            if (dom.tradeStatus) {
+              dom.tradeStatus.textContent = "Waiting for live price data…";
+            }
+            return;
+          }
+
+          const hasAmount = Number.isFinite(amountValue) && amountValue > 0;
+          const qty = hasAmount ? amountValue : 0;
+          const impact = Number.isFinite(impactValue) ? impactValue : 0;
+          const fillPrice = price * (1 + impact / 100);
+          const total = qty * fillPrice;
+          const deltaPercent = ((fillPrice - price) / price) * 100;
+
+          dom.tradePrice.textContent = formatCurrency(price);
+          dom.tradeFill.textContent = formatCurrency(fillPrice);
+          dom.tradeTotal.textContent = hasAmount ? formatCurrency(total) : "—";
+          if (dom.tradeDelta) {
+            dom.tradeDelta.textContent = formatSignedPercent(deltaPercent);
+            if (deltaPercent < 0) {
+              dom.tradeDelta.classList.add("negative");
+            } else {
+              dom.tradeDelta.classList.remove("negative");
+            }
+          }
+
+          if (dom.tradeStatus) {
+            if (!hasAmount) {
+              dom.tradeStatus.textContent =
+                "Enter an amount to simulate an order.";
+            } else {
+              const sideLabel = side === "sell" ? "Proceeds" : "Cost";
+              const qtyLabel = qty.toLocaleString(undefined, {
+                maximumFractionDigits: qty < 1 ? 6 : 2,
+              });
+              const changeSuffix = Number.isFinite(Number(state.change24h))
+                ? ` 24h move: ${formatSignedPercent(state.change24h)}.`
+                : "";
+              dom.tradeStatus.textContent = `${sideLabel} estimate for ${qtyLabel} BC2 at ${
+                dom.tradeImpact?.textContent ?? `${impact.toFixed(2)}%`
+              } impact.${changeSuffix}`;
+            }
+          }
+        }
+
+        function updateBlockFollow(block) {
+          if (!dom.followHeight) {
+            return;
+          }
+          if (!block) {
+            dom.followHeight.textContent = "—";
+            if (dom.followTime) dom.followTime.textContent = "—";
+            if (dom.followTx) dom.followTx.textContent = "—";
+            if (dom.followMiner) dom.followMiner.textContent = "—";
+            if (dom.followReward) dom.followReward.textContent = "—";
+            return;
+          }
+          if (dom.followHeight) {
+            dom.followHeight.textContent = formatNumber(block.height);
+          }
+          if (dom.followTime) {
+            const timestamp = Number(block.timestamp) * 1000;
+            dom.followTime.textContent = Number.isFinite(timestamp)
+              ? formatTimeAgo(new Date(timestamp))
+              : "—";
+          }
+          if (dom.followTx) {
+            dom.followTx.textContent = Number.isFinite(Number(block.tx_count))
+              ? Number(block.tx_count).toLocaleString()
+              : "—";
+          }
+          if (dom.followMiner) {
+            const miner =
+              block?.extras?.pool?.name ||
+              block?.extras?.coinbaseAddress ||
+              (Array.isArray(block?.extras?.coinbaseAddresses)
+                ? block.extras.coinbaseAddresses[0]
+                : null);
+            dom.followMiner.textContent = miner || "Unknown";
+          }
+          if (dom.followReward) {
+            const rewardSat = block?.extras?.reward;
+            if (Number.isFinite(Number(rewardSat))) {
+              const rewardBtc = Number(rewardSat) / 100_000_000;
+              dom.followReward.textContent =
+                rewardBtc < 1
+                  ? `${rewardBtc.toFixed(8)} BC2`
+                  : `${rewardBtc.toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                    })} BC2`;
+            } else {
+              dom.followReward.textContent = "—";
+            }
+          }
+        }
+
+        function initTradeSimulation() {
+          if (!dom.tradeForm) return;
+          dom.tradeForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            updateTradeSimulation();
+          });
+          dom.tradeAmount?.addEventListener("input", updateTradeSimulation);
+          dom.tradeSide?.addEventListener("change", updateTradeSimulation);
+          dom.tradeSlippage?.addEventListener("input", (event) => {
+            updateImpactLabel(event.target.value);
+            updateTradeSimulation();
+          });
+          updateImpactLabel(dom.tradeSlippage?.value ?? 0);
+          updateTradeSimulation();
+        }
+
+        function formatSize(bytes) {
+          if (!Number.isFinite(Number(bytes))) return "—";
+          const num = Number(bytes);
+          if (num < 1024) return `${num} B`;
+          if (num < 1024 * 1024) return (num / 1024).toFixed(1) + " kB";
+          return (num / (1024 * 1024)).toFixed(2) + " MB";
+        }
+
+        function formatTimeAgo(date) {
+          if (!(date instanceof Date) || Number.isNaN(date.getTime()))
+            return "—";
+          const diff = Date.now() - date.getTime();
+          const table = [
+            ["day", 86_400_000],
+            ["hour", 3_600_000],
+            ["minute", 60_000],
+            ["second", 1_000],
+          ];
+          for (const [unit, ms] of table) {
+            const value = Math.round(diff / ms);
+            if (Math.abs(value) >= 1 || unit === "second") {
+              return relativeFormatter
+                ? relativeFormatter.format(-value, unit)
+                : `${Math.abs(value)} ${unit}${Math.abs(value) === 1 ? "" : "s"} ago`;
+            }
+          }
+          return "just now";
+        }
+
+        function formatDuration(seconds) {
+          if (!Number.isFinite(Number(seconds))) return "—";
+          const total = Math.max(0, Number(seconds));
+          const days = Math.floor(total / 86_400);
+          const hours = Math.floor((total % 86_400) / 3_600);
+          const minutes = Math.floor((total % 3_600) / 60);
+          const parts = [];
+          if (days) parts.push(`${days} day${days === 1 ? "" : "s"}`);
+          if (hours) parts.push(`${hours} hr${hours === 1 ? "" : "s"}`);
+          if (parts.length < 2 && minutes)
+            parts.push(`${minutes} min${minutes === 1 ? "" : "s"}`);
+          return parts.length ? parts.join(", ") : "under a minute";
+        }
+
+        function computeReward(height) {
+          if (!Number.isFinite(Number(height))) return 0;
+          const halvings = Math.floor(Number(height) / HALVING_INTERVAL);
+          const reward = INITIAL_REWARD / Math.pow(2, halvings);
+          return reward < 0.00000001 ? 0 : reward;
+        }
+
+        function renderBlockList(blocks) {
+          if (!dom.blockList) return;
+          dom.blockList.innerHTML = blocks
+            .map((block) => {
+              const reward = computeReward(block.height);
+              const ts = new Date(Number(block.timestamp) * 1000);
+              const age = formatTimeAgo(ts);
+              const txCount = Number(block.tx_count) || 0;
+              const size = formatSize(block.size);
+              const miner =
+                block?.extras?.pool?.name ||
+                block?.extras?.coinbaseAddress ||
+                (Array.isArray(block?.extras?.coinbaseAddresses)
+                  ? block.extras.coinbaseAddresses[0]
+                  : "Unknown");
+              return `<li><div class="block-headline"><span>#${formatNumber(
+                block.height,
+              )}</span><span>${age}</span></div><div class="block-meta"><span>${txCount} txs</span><span>${size}</span><span>${reward.toFixed(
+                reward < 1 ? 8 : 2,
+              )} BC2</span></div><div class="block-meta">Mined by ${miner}</div></li>`;
+            })
+            .join("");
+        }
+
+        function computeAvgBlockTime(blocks) {
+          if (!Array.isArray(blocks) || blocks.length < 2) return null;
+          const diffs = [];
+          for (let i = 1; i < blocks.length; i++) {
+            const current = Number(blocks[i - 1]?.timestamp);
+            const next = Number(blocks[i]?.timestamp);
+            if (Number.isFinite(current) && Number.isFinite(next)) {
+              diffs.push(current - next);
+            }
+          }
+          if (!diffs.length) return null;
+          const avgSeconds = diffs.reduce((sum, value) => sum + value, 0) / diffs.length;
+          return avgSeconds;
+        }
+
+        function updateTelemetry(height, blocks, avgSeconds) {
+          if (dom.blockReward) {
+            const reward = computeReward(height);
+            dom.blockReward.textContent = reward ? `${reward.toFixed(reward < 1 ? 8 : 2)} BC2` : "—";
+          }
+
+          if (dom.avgBlockTime) {
+            dom.avgBlockTime.textContent = avgSeconds ? formatDuration(avgSeconds) : "—";
+          }
+
+          if (dom.difficultyTrend) {
+            const latest = blocks?.[0];
+            const previous = blocks?.[blocks.length - 1];
+            if (latest && previous && Number.isFinite(latest.difficulty) && Number.isFinite(previous.difficulty)) {
+              const change = ((latest.difficulty - previous.difficulty) / previous.difficulty) * 100;
+              dom.difficultyTrend.textContent = formatSignedPercent(change);
+              if (change < 0) {
+                dom.difficultyTrend.classList.add("negative");
+              } else {
+                dom.difficultyTrend.classList.remove("negative");
+              }
+            } else {
+              dom.difficultyTrend.textContent = "—";
+              dom.difficultyTrend.classList.remove("negative");
+            }
+          }
+
+          if (!Number.isFinite(height)) return;
+
+          const halvings = Math.floor(height / HALVING_INTERVAL);
+          const nextHalvingHeight = (halvings + 1) * HALVING_INTERVAL;
+          const remainingBlocks = nextHalvingHeight - height;
+          const progress = Math.max(0, Math.min(1, height / nextHalvingHeight));
+
+          if (dom.halvingProgress) {
+            dom.halvingProgress.style.width = `${(progress * 100).toFixed(2)}%`;
+          }
+          if (dom.halvingProgressLabel) {
+            dom.halvingProgressLabel.textContent = `Halving ${halvings + 1} progress ${(
+              progress * 100
+            ).toFixed(2)}%`;
+          }
+          if (dom.nextHalvingHeight) {
+            dom.nextHalvingHeight.textContent = formatNumber(nextHalvingHeight);
+          }
+          const emitted = computeEmitted(height);
+          if (dom.supplyMinted) {
+            dom.supplyMinted.textContent = Number.isFinite(emitted)
+              ? emitted.toLocaleString(undefined, {
+                  maximumFractionDigits: 0,
+                })
+              : "--";
+          }
+          if (dom.supplyPercent) {
+            dom.supplyPercent.textContent = Number.isFinite(emitted)
+              ? ((emitted / MAX_SUPPLY) * 100).toFixed(2) + "%"
+              : "--";
+          }
+          if (dom.halvingEta) {
+            const secondsRemaining = Number.isFinite(avgSeconds)
+              ? remainingBlocks * avgSeconds
+              : remainingBlocks * 120;
+            dom.halvingEta.textContent = formatDuration(secondsRemaining);
+          }
+          if (dom.halvingCountdown) {
+            const secondsRemaining = Number.isFinite(avgSeconds)
+              ? remainingBlocks * avgSeconds
+              : remainingBlocks * 120;
+            dom.halvingCountdown.textContent = formatDuration(secondsRemaining);
+          }
+        }
+
+        function computeEmitted(height) {
+          if (!Number.isFinite(Number(height))) return 0;
+          let remaining = Math.max(0, Math.floor(Number(height)) + 1);
+          let reward = INITIAL_REWARD;
+          let emitted = 0;
+          while (remaining > 0 && reward > 0) {
+            const span = Math.min(HALVING_INTERVAL, remaining);
+            emitted += span * reward;
+            remaining -= span;
+            reward /= 2;
+          }
+          return Math.min(emitted, MAX_SUPPLY);
+        }
+
+        async function updateHistory() {
+          if (historyLoaded || historyLoading) return;
+          historyLoading = true;
+          try {
+            const now = Date.now();
+            const start = now - 1000 * 60 * 60 * 24 * 7;
+            const params = new URLSearchParams({
+              start: new Date(start).toISOString(),
+              end: new Date(now).toISOString(),
+              limit: "30",
+            });
+            const history = await fetchJson(`${API.history}?${params.toString()}`);
+            const series = Array.isArray(history)
+              ? history
+                  .filter((entry) => Number.isFinite(entry?.price))
+                  .map((entry) => Number(entry.price))
+              : null;
+            if (series && series.length > 1) {
+              renderSpark(dom.chart, series);
+              renderSpark(dom.sideMini, series.slice(-15));
+            }
+            historyLoaded = true;
+          } catch (err) {
+            console.warn("Unable to load BC2 price history", err);
+          } finally {
+            historyLoading = false;
+          }
+        }
+
+        function initHistoryObserver() {
+          if (!('IntersectionObserver' in window) || !dom.chart) {
+            updateHistory();
+            return;
+          }
+          const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                updateHistory();
+                obs.disconnect();
+              }
+            });
+          });
+          observer.observe(dom.chart);
+        }
+
+        async function updateMarket() {
+          try {
+            const data = await fetchJson(API.ticker);
+            if (!data || !data.quotes || !data.quotes.USD) throw new Error("Missing USD quote");
+            const usd = data.quotes.USD;
+            dom.price.textContent = dom.sidePrice.textContent = formatCurrency(usd.price);
+            applyChange(dom.change, usd.percent_change_24h);
+            applyChange(dom.sideChange, usd.percent_change_24h);
+            dom.volume.textContent = formatCurrency(usd.volume_24h);
+            dom.cap.textContent = formatCurrency(usd.market_cap);
+            dom.change7d.textContent = formatPercent(usd.percent_change_7d);
+            const updated = new Date(data.last_updated * 1000);
+            dom.updated.textContent = formatTimeAgo(updated);
+            if (dom.marketAsOf) {
+              const relative = formatTimeAgo(updated);
+              dom.marketAsOf.textContent = `CoinPaprika • updated ${relative}`;
+            }
+
+            state.lastPrice = Number(usd.price);
+            state.change24h = Number(usd.percent_change_24h);
+            updateTradeSimulation();
+
+            if (!historyLoaded) {
+              updateHistory();
+            }
+          } catch (err) {
+            console.warn("Unable to load BC2 market data", err);
+            dom.price.textContent = dom.sidePrice.textContent = "—";
+            dom.change.textContent = dom.sideChange.textContent = "—";
+            dom.change.classList.remove("negative");
+            dom.sideChange.classList.remove("negative");
+            dom.volume.textContent =
+              dom.cap.textContent =
+              dom.change7d.textContent =
+                "—";
+            state.lastPrice = null;
+            state.change24h = null;
+            updateTradeSimulation();
+            if (dom.marketAsOf) {
+              dom.marketAsOf.textContent =
+                "CoinPaprika • unable to fetch live data";
+            }
+          }
+        }
+
+        async function updateBlocks() {
+          try {
+            const blocks = await fetchJson(API.blocks);
+            if (!Array.isArray(blocks) || blocks.length === 0)
+              throw new Error("No blocks returned");
+            const latest = blocks[0];
+            updateBlockFollow(latest);
+            dom.height.textContent = formatNumber(latest.height);
+            if (dom.navHeight) {
+              dom.navHeight.textContent = formatNumber(latest.height);
+            }
+            dom.difficulty.textContent = formatNumber(latest.difficulty, {
+              maximumFractionDigits: 2,
+            });
+            const latestTime = new Date(Number(latest.timestamp) * 1000);
+            dom.lastBlock.textContent = formatTimeAgo(latestTime);
+            if (dom.navExplorerAge) {
+              dom.navExplorerAge.textContent = formatTimeAgo(latestTime);
+            }
+            if (dom.networkAsOf) {
+              const relative = formatTimeAgo(latestTime);
+              dom.networkAsOf.textContent = `bitcoinii.space • updated ${relative}`;
+            }
+            if (dom.navExplorerStatus) {
+              dom.navExplorerStatus.textContent = "Live";
+            }
+            if (dom.navExplorerDot) {
+              dom.navExplorerDot.classList.add("is-live");
+              dom.navExplorerDot.classList.remove("is-offline");
+            }
+
+            renderBlockList(blocks);
+            const avgSeconds = computeAvgBlockTime(blocks);
+            updateTelemetry(Number(latest.height), blocks, avgSeconds);
+          } catch (err) {
+            console.warn("Unable to load BC2 blocks", err);
+            if (dom.blockList) {
+              dom.blockList.innerHTML =
+                "<li><span>Unable to load blocks. Visit the explorer for the latest data.</span></li>";
+            }
+            updateBlockFollow(null);
+            if (dom.navHeight) {
+              dom.navHeight.textContent = "--";
+            }
+            if (dom.navExplorerAge) {
+              dom.navExplorerAge.textContent = "—";
+            }
+            if (dom.navExplorerStatus) {
+              dom.navExplorerStatus.textContent = "Offline";
+            }
+            if (dom.navExplorerDot) {
+              dom.navExplorerDot.classList.remove("is-live");
+              dom.navExplorerDot.classList.add("is-offline");
+            }
+            if (dom.networkAsOf) {
+              dom.networkAsOf.textContent =
+                "bitcoinii.space • unable to reach explorer";
+            }
+          }
+        }
+
+        function renderMarketsTable(markets) {
+          if (!dom.marketsBody) return;
+          if (!Array.isArray(markets) || markets.length === 0) {
+            dom.marketsBody.innerHTML =
+              '<tr><td colspan="4">No public markets reported on CoinPaprika.</td></tr>';
+            return;
+          }
+          const sorted = markets
+            .filter((market) => market?.quotes?.USD)
+            .sort(
+              (a, b) =>
+                Number(b.quotes.USD.volume_24h || 0) -
+                Number(a.quotes.USD.volume_24h || 0),
+            )
+            .slice(0, 6);
+
+          if (sorted.length === 0) {
+            dom.marketsBody.innerHTML =
+              '<tr><td colspan="4">No USD-quoted markets available.</td></tr>';
+            return;
+          }
+
+          dom.marketsBody.innerHTML = sorted
+            .map((market) => {
+              const quote = market.quotes.USD;
+              const exchange = market.exchange_name || market.market || "—";
+              const price = formatCurrency(quote.price);
+              const volume = formatCurrency(quote.volume_24h);
+              const link =
+                market.market_url ||
+                (market.url ? `https://coinpaprika.com${market.url}` : null);
+              const exchangeCell = link
+                ? `<a href="${link}" target="_blank" rel="noreferrer">${exchange}</a>`
+                : exchange;
+              return `<tr><td>${exchangeCell}</td><td>${market.pair}</td><td>${price}</td><td>${volume}</td></tr>`;
+            })
+            .join("");
+        }
+
+        async function updateMarkets() {
+          try {
+            const markets = await fetchJson(API.markets);
+            renderMarketsTable(markets);
+          } catch (err) {
+            console.warn("Unable to load BC2 market listings", err);
+            if (dom.marketsBody) {
+              dom.marketsBody.innerHTML =
+                '<tr><td colspan="4">Unable to reach CoinPaprika. Try again later.</td></tr>';
+            }
+          }
+        }
+
+        function stopIntervals() {
+          timers.forEach((id) => clearInterval(id));
+          timers = [];
+        }
+
+        function startIntervals() {
+          stopIntervals();
+          timers.push(setInterval(updateMarket, 60_000));
+          timers.push(setInterval(updateBlocks, 45_000));
+          timers.push(setInterval(updateMarkets, 120_000));
+        }
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            stopIntervals();
+          } else {
+            updateMarket();
+            updateBlocks();
+            updateMarkets();
+            startIntervals();
+          }
+        });
+
+        window.addEventListener("beforeunload", stopIntervals);
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Tab") document.body.classList.add("show-focus");
+        });
+
+        initTradeSimulation();
+        updateMarket();
+        updateBlocks();
+        updateMarkets();
+        initHistoryObserver();
+        startIntervals();
+      })();
     </script>
-
-</body>
+  </body>
 </html>
