@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitcoin II - A Second Chance</title>
-
+    <title>Bitcoin II - True Bitcoin Reset</title>
     <meta name="description" content="The BitcoinII Community Website"/>
     <meta property="og:image" content="https://bitcoiniicore.org/banner2.png"/>
     <meta property="og:image:type" content="image/png"/>
@@ -19,1229 +18,1243 @@
     <meta name="twitter:image" content="https://bitcoiniicore.org/banner2.png"/>
     <meta name="twitter:domain" content="bitcoiniicore.org">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="images/favicon.ico">
     <link id="canonical" rel="canonical" href="https://bitcoiniicore.org">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="msapplication-TileColor" content="#000000">
+<style>
+    /* Base styles with character */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    :root {
+        --orange: #F7931A;
+        --orange-dark: #E07A16;
+        --orange-light: #F9A94A;
+        --gray-dark: #2D3748;
+        --gray-medium: #4A5568;
+        --gray-light: #718096;
+        --gray-bg: #F7FAFC;
+        --white: #FFFFFF;
+        --border: #E2E8F0;
+    }
 
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(-45deg, #000000, #111111, #222222, #000000);
-            background-size: 400% 400%;
-            animation: gradientMove 30s ease infinite;
-            color: #e5e5e5;
-            overflow-x: hidden;
-            position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(#ffffff11 1px, transparent 1px);
-            background-size: 3px 3px;
-            pointer-events: none;
-            animation: twinkle 5s ease-in-out infinite, moveBackground 60s linear infinite;
-            z-index: -1;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 4px);
-            pointer-events: none;
-            animation: moveBackground 60s linear infinite;
-            opacity: 0.1;
-            mix-blend-mode: overlay;
-            z-index: -1;
-        }
-        body.light {
-            background: linear-gradient(-45deg, #ffffff, #f0f0ff, #ffffff, #e0e0f5);
-            background-size: 400% 400%;
-            animation: gradientMove 30s ease infinite;
-            color: #000000;
-        }
-        body.light::before {
-            animation: twinkle 5s ease-in-out infinite, moveBackground 60s linear infinite;
-            background: radial-gradient(#00000022 1px, transparent 1px);
-        }
-        body.light::after {
-            background: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0 2px, transparent 2px 4px);
-            animation: moveBackground 60s linear infinite;
-        }
-        body.loading {
-            overflow: hidden;
-        }
-        @keyframes twinkle {
-            0%,100% { opacity: 0.2; }
-            50% { opacity: 0.6; }
-        }
-        @keyframes moveBackground { from { background-position: 0 0; } to { background-position: 200px 200px; } }
-        #loading-screen {
-            background: radial-gradient(circle at center, #161616, #000);
-            transition: opacity 1s ease, transform 1s ease;
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        #loading-screen.fade-out {
-            opacity: 0;
-            transform: scale(0.9);
-            pointer-events: none;
-        }
-        #loading-screen::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(#ffffff44 1px, transparent 1px);
-            background-size: 6px 6px;
-            animation: twinkle 1.5s ease-in-out infinite, rotateStars 80s linear infinite;
-            pointer-events: none;
-        }
-        @keyframes rotateStars { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        #loading-logo {
-            width: 120px;
-            height: 120px;
-            animation: bounceIn 2.5s ease forwards;
-            opacity: 0;
-        }
-        @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); } }
-        #loading-bar {
-            width: 70%;
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 9999px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        #loading-bar-inner {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(to right, #f7931a, #ffc65a);
-            background-image: linear-gradient(45deg, rgba(255,255,255,0.3) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.3) 75%, transparent 75%, transparent);
-            background-size: 1rem 1rem;
-            border-radius: 9999px;
-        }
-        #loading-bar-inner.start {
-            animation: loadingProgress 1.5s linear forwards, moveStripe 1s linear infinite, pulseBar 1s ease-in-out infinite;
-        }
-        #loading-percent {
-            text-shadow: 0 0 6px rgba(0,0,0,0.4);
-        }
-        @keyframes pulseBar { 0%,100% { transform: scaleY(1); } 50% { transform: scaleY(1.2); } }
-        @keyframes loadingProgress { from { width: 0%; } to { width: 100%; } }
-        @keyframes moveStripe { from { background-position: 0 0; } to { background-position: 1rem 0; } }
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-spin-slow { animation: spinSlow 8s linear infinite; }
-        .spotlight {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.1) 0%, rgba(247, 147, 26, 0) 70%);
-            pointer-events: none;
-            z-index: 100;
-            transform: translate(-50%, -50%);
-            transition: background 0.2s ease;
-        }
-        .glass-effect {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
-        }
-        body.light .glass-effect {
-            background: rgba(255, 255, 255, 0.6);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        .hero-gradient {
-            background: radial-gradient(ellipse at 50% -10%, rgba(247, 147, 26, 0.3) 0%, rgba(10, 10, 10, 0) 60%), linear-gradient(120deg, rgba(255,255,255,0.05), transparent);
-            position: relative;
-            overflow: hidden;
-        }
-        #particle-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            transition: transform 0.2s ease-out;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-        .btn-primary {
-            background-image: linear-gradient(to right, #f7931a, #f9a84a);
-            color: #000000;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: none;
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 25px rgba(247, 147, 26, 0.25);
-        }
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid #f7931a;
-            color: #f7931a;
-            transition: all 0.3s ease;
-        }
-        .btn-secondary:hover {
-            background-color: #f7931a;
-            color: #0a0a0a;
-            box-shadow: 0 0 20px rgba(247, 147, 26, 0.4);
-        }
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        line-height: 1.6;
+        color: var(--gray-dark);
+        background: var(--white);
+        overflow-x: hidden;
+    }
 
-        .stat-card {
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        
-        /* Flip Card */
-        .flip-card {
-            perspective: 1000px;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.5rem;
-            transition: all 0.4s ease;
-        }
-        .flip-card:hover {
-            transform: translateY(-8px);
-            border-color: #f7931a;
-            box-shadow: 0 0 20px rgba(247, 147, 26, 0.2);
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
-        }
-        .flip-card-front::after {
-            content: '\f021'; /* Font Awesome refresh icon */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            color: rgba(255,255,255,0.2);
-            transition: all 0.3s ease;
-        }
-        .flip-card:hover .flip-card-front::after {
-            color: #f7931a;
-            transform: rotate(180deg);
-        }
-        .flip-card-back {
-            transform: rotateY(180deg);
-            font-size: 0.9rem;
-            text-align: center;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 10px 10px;
-        }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
 
-        /* Mobile Menu Styling */
-        .mobile-nav {
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        .mobile-nav.open {
-            transform: translateX(0);
-        }
-        /* Scroll Animation */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-        .scroll-reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        #coin-canvas-container {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #coin-canvas-container::before {
-            content: '';
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(247, 147, 26, 0.3) 0%, rgba(247, 147, 26, 0) 70%);
-            border-radius: 50%;
-            z-index: -1;
-            animation: pulse 4s infinite ease-in-out;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.7; }
-        }
-        #coin-canvas {
-            width: 300px !important;
-            height: 300px !important;
-            cursor: grab;
-        }
-        #coin-canvas:active {
-            cursor: grabbing;
-        }
-        .hero-title {
-            background: linear-gradient(45deg, #f7931a, #ffc65a, #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(247, 147, 26, 0.5);
-            animation: float 6s ease-in-out infinite;
-        }
-        body.light .hero-title {
-            background: none;
-            -webkit-text-fill-color: #000000;
-            text-shadow: none;
-        }
-        .terminal-window {
-            background-color: #0D1117;
-            border: 1px solid #30363D;
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        body.light .terminal-window {
-            background-color: #f5f5f5;
-            border-color: #ddd;
-        }
-        .terminal-header {
-            background-color: #161B22;
-            padding: 0.5rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        body.light .terminal-header {
-            background-color: #eee;
-        }
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        .code-block {
-            padding: 1.5rem;
-            position: relative;
-        }
-        .copy-btn {
-            position: absolute;
-            top: 1.25rem;
-            right: 1.25rem;
-            background-color: #21262D;
-            border: 1px solid #30363D;
-            color: #C9D1D9;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .copy-btn:hover {
-            background-color: #30363D;
-            border-color: #8B949E;
-        }
-        body.light .copy-btn {
-            background-color: #f0f0f0;
-            border-color: #ccc;
-            color: #333;
-        }
-        body.light .copy-btn:hover {
-            background-color: #e0e0e0;
-            border-color: #bbb;
-        }
-        .social-icon:hover {
-            animation: bounce 0.6s ease;
-        }
-        body.light .social-icon {
-            color: #555;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-10px);}
-            60% {transform: translateY(-5px);}
-        }
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        @keyframes float {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .nav-link:hover, .nav-link.active {
-            color: #f7931a;
-            text-shadow: 0 0 8px rgba(247, 147, 26, 0.7);
-        }
-        body.light .nav-link {
-            color: #000000;
-        }
-        body.light .text-white {
-            color: #000000 !important;
-        }
-        body.light .text-gray-400 {
-            color: #000000 !important;
-        }
-        body.light .text-gray-300,
-        body.light .text-gray-500 {
-            color: #000000 !important;
-        }
-        #back-to-top {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: #f7931a;
-            color: #0a0a0a;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
-            z-index: 50;
-        }
-        #back-to-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-        #back-to-top:hover {
-            transform: scale(1.1);
-        }
-        #theme-toggle i {
-            transition: transform 0.3s;
-        }
-        #theme-toggle:hover i {
-            transform: rotate(20deg);
-        }
-        @media (max-width: 827px) {
-            #desktop-nav {
-                display: none !important;
-            }
-
-            #mobile-menu-button {
-                display: block !important;
-            }
-        }
-        @media (min-width: 828px) {
-            #desktop-nav {
-                display: flex !important;
-            }
-
-            #mobile-menu-button {
-                display: none !important;
-            }
-        }
-        @media (min-width: 828px) {
-            #google-play-button {
-                display: block !important;
-            }
-        }
-        @media (max-width: 827px) {
-            #google-play-button {
-                display: none !important;
-            }
-        }
-      .node-frame {
+    /* Asymmetric navigation */
+    .navbar {
+        background: var(--white);
+        position: fixed;
         width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid var(--border);
+        padding: 0.8rem 0;
+    }
+
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h1, h2, .section-title, .hero-text h1, .feature-text h3 {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: var(--gray-dark);
+    }
+
+    .logo-img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        transform: rotate(-5deg);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2.2rem;
+        align-items: center;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: var(--gray-medium);
+        font-weight: 500;
+        transition: all 0.3s;
+        position: relative;
+        font-size: 0.95rem;
+    }
+
+    .nav-links a:not(.nav-cta):hover {
+        color: var(--orange);
+        transform: translateY(-1px);
+    }
+
+    .nav-links a:not(.nav-cta)::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--orange);
+        transition: width 0.3s;
+    }
+
+    .nav-links a:not(.nav-cta):hover::after {
+        width: 100%;
+    }
+
+    .nav-cta {
+        background: var(--orange);
+        color: var(--white) !important;
+        padding: 0.7rem 1.6rem;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-left: 1rem;
+        transform: skew(-5deg);
+    }
+
+    .nav-cta:hover {
+        background: var(--orange-dark);
+        transform: skew(-5deg) translateY(-2px);
+    }
+
+    .mobile-menu-btn {
+        display: none;
+        background: none;
         border: none;
-        border-radius: var(--radius-md);
-        min-height: 320px;
-        background: rgba(0, 0, 0, 0.2);
-      }
-      .node-fallback {
-        padding: 16px;
-        border-radius: var(--radius-md);
-        border: 1px solid rgba(116, 246, 255, 0.12);
-        background: rgba(8, 12, 36, 0.8);
-        color: var(--text-muted);
-      }
-    </style>
+        color: var(--gray-dark);
+        font-size: 1.4rem;
+        cursor: pointer;
+    }
+
+    /* Hero with personality */
+    .hero {
+        background: linear-gradient(135deg, var(--white) 0%, var(--gray-bg) 100%);
+        padding: 160px 0 80px;
+        position: relative;
+    }
+
+    @keyframes morph {
+        0%, 100% { border-radius: 40% 60% 70% 30% / 40% 40% 60% 50%; }
+        34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+        67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+    }
+
+    .hero-content {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 4rem;
+        align-items: center;
+    }
+
+    .hero-text h1 {
+        font-size: 3.2rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        color: var(--gray-dark);
+    }
+
+    .hero-accent {
+        color: var(--orange);
+        position: relative;
+        display: inline-block;
+    }
+
+    .hero-accent::after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: var(--orange-light);
+        opacity: 0.3;
+        z-index: -1;
+        transform: skew(-15deg);
+    }
+
+    .hero-text p {
+        font-size: 1.2rem;
+        color: var(--gray-medium);
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+        max-width: 500px;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 14px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary {
+        background: var(--orange);
+        color: var(--white);
+        transform: translateY(0);
+    }
+
+    .btn-primary:hover {
+        background: var(--orange-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(247, 147, 26, 0.3);
+    }
+
+    .btn-secondary {
+        border-color: var(--orange);
+        color: var(--orange);
+        background: transparent;
+    }
+
+    .btn-secondary:hover {
+        background: var(--orange);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    .hero-visual {
+        position: relative;
+        text-align: center;
+    }
+
+    .bc2-graphic {
+        width: 100%;
+        max-width: 320px;
+        height: 280px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin: 0 auto;
+    }
+
+    .bc2-graphic img {
+        width: 100%;
+    }
+
+    .bc2-logo {
+        width: 100px;
+        height: 100px;
+        background: var(--orange);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--white);
+        position: relative;
+    }
+
+    .bc2-logo::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border: 2px solid var(--orange-light);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+    }
+
+    /* FEATURES (mobile-first, alternating) */
+    .features {
+        padding: 100px 0;
+        background: var(--white);
+    }
+
+    .section-header {
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 3.5rem;
+        font-weight: 900;
+        margin-bottom: 1rem;
+        color: var(--gray-dark);
+        text-transform: uppercase;
+        position: relative;
+        display: inline-block;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: var(--gray-medium);
+        line-height: 1.6;
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    /* mobile-first: stacked rows */
+    .features-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .feature-row {
+        display: flex;
+        flex-direction: column;
+        gap: 1.3rem;
+    }
+
+    .feature-text h3 {
+        font-size: 2.35rem;
+        margin-bottom: 0.6rem;
+        color: var(--gray-dark);
+    }
+
+    .feature-text p {
+        color: var(--gray-medium);
+        line-height: 1.6;
+        font-size: 1.1rem;
+        max-width: 32rem;
+    }
+
+    .feature-cta {
+        margin-top: 1rem;
+        width: 100%;
+        background-color: #6a7cf1;
+    }
+
+    .feature-max-supply {
+        margin-top: 1rem;
+        width: 100%;
+        background-color: #81679b;
+        color: #fff;
+        border: #81679b;
+    }
+
+    .feature-mining {
+        margin-top: 1rem;
+        width: 100%;
+        background-color: #343d79;
+        color: #fff;
+        border: #36407d;
+    }
+
+    .feature-no-compromise {
+        margin-top: 1rem;
+        width: 100%;
+        background-color: #f57501;
+        color: #fff;
+        border: #f67501;
+    }
+
+    .feature-comunity {
+        margin-top: 1rem;
+        width: 100%;
+        background-color: #babcf6;
+        color: #fff;
+        border: #8d86d7;
+    }
+
+    .feature-media {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .feature-media-box {
+        padding: 2.2rem;
+    }
+
+    .feature-illustration {
+        font-size: 2.4rem;
+    }
+
+    .feature-illustration img {
+        width: 350px;
+    }
+
+    /* Stats with character */
+    .stats {
+        background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%);
+        padding: 70px 0;
+        position: relative;
+        color: var(--white);
+    }
+
+    .stats::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-size: 50px 50px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 2.5rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .stat-item {
+        transform: scale(1);
+        transition: transform 0.3s;
+    }
+
+    .stat-item:hover {
+        transform: scale(1.05);
+    }
+
+    .stat-item h3 {
+        font-size: 2.8rem;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+    }
+
+    .stat-item p {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+
+    /* CTA section */
+    .cta-section {
+        padding: 100px 0;
+        background: var(--gray-bg);
+        text-align: center;
+    }
+
+    .cta-content {
+        max-width: 550px;
+        margin: 0 auto;
+    }
+
+    .cta-content h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--gray-dark);
+        font-weight: 900;
+    }
+
+    .cta-content p {
+        font-size: 1.1rem;
+        color: var(--gray-medium);
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+        background: var(--gray-dark);
+        color: var(--white);
+        padding: 50px 0 30px;
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+    }
+
+    .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+
+    .footer-description {
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.6;
+        font-size: 0.95rem;
+        max-width: 300px;
+    }
+
+    .footer-links h4 {
+        color: var(--white);
+        margin-bottom: 1.2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .footer-links a {
+        display: block;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        margin-bottom: 0.6rem;
+        transition: color 0.3s;
+        font-size: 0.9rem;
+    }
+
+    .footer-links a:hover {
+        color: var(--orange);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+    }
+
+    .block {
+        display: block;
+        line-height: 35px;
+    }
+
+    .bg-light {
+        background-color: rgb(240, 240, 245);
+        padding: 70px 0;
+        color: var(--white);
+        position: relative;
+    }
+
+    /* Exchanges Accordion */
+    .exchanges-accordion {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        margin-top: 0;
+    }
+
+    .exchanges-accordion.show {
+        max-height: 100%;
+    }
+
+    /* Exchanges Grid */
+    .exchanges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 30px;
+    }
+
+    /* Exchange Card */
+    .exchange-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .exchange-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .exchange-logo {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+
+    .exchange-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .exchange-card h4 {
+        margin: 0 0 8px 0;
+        color: #2c3e50;
+        font-size: 1.1rem;
+    }
+
+    .exchange-card p {
+        margin: 0 0 15px 0;
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .exchange-features {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .feature-tag {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .exchange-link {
+        display: inline-block;
+        background: #007bff;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: background 0.2s ease;
+    }
+
+    .coinex {
+        background: #1adfbc !important;
+    }
+
+    .rabbid {
+        background: #f1592a !important;
+    }
+
+    .nonkyc {
+        background: #333 !important;
+        color: #fff !important;
+    }
+
+    .exchange-link:hover {
+        background: #0056b3;
+    }
+
+    .accordion_exchange {
+        background: #ff6600;
+    }
+
+    .pb0 {
+        padding-bottom: 0;
+    }
+
+    .pt0 {
+        padding-top: 0;
+    }
+
+
+    /* Creator badge */
+    .creator-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        transition: all 0.25s ease;
+    }
+
+    .creator-badge:hover {
+        background: rgba(247, 147, 26, 0.2);
+        color: var(--white);
+        transform: translateY(-1px);
+    }
+
+    .creator-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--orange);
+        box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.3);
+    }
+    .full-text {
+        display: none;
+    }
+    
+    .mobile-text {
+        display: inline;
+    }
+
+
+    /* Merged Media Queries */
+    @media (min-width: 768px) {
+        .features-list {
+            gap: 3rem;
+        }
+
+        .feature-row {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feature-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-text {
+            flex: 1;
+            max-width: 480px;
+        }
+
+        .feature-media {
+            flex: 0 0 auto;
+        }
+        .full-text {
+            display: inline;
+        }
+    
+        .mobile-text {
+            display: none;
+        }
+    }
+
+    @media (max-width: 968px) {
+        .hero-content {
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .hero-text h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-text p {
+            margin: 0 auto;
+        }
+
+        .hero-visual {
+            order: -1;
+        }
+
+        .hero-buttons {
+            display: block;
+            margin-top: 30px;
+        }
+
+        .footer-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .feature-media {
+            order: -1;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            flex-direction: column;
+            padding: 2rem;
+            gap: 1.5rem;
+            border-top: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links.active {
+            display: flex;
+        }
+
+        .mobile-menu-btn {
+            display: block;
+        }
+
+        .hero-text h1 {
+            font-size: 2.2rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            line-height: normal;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .btn {
+            width: 100%;
+            /*max-width: 280px;*/
+        }
+
+        .exchanges-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .exchange-card {
+            padding: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero {
+            padding: 120px 0 60px;
+        }
+
+        .feature-media-box {
+            padding: 1.8rem;
+        }
+
+        .exchanges-grid {
+            padding: 15px;
+        }
+
+        .exchange-card {
+            padding: 12px;
+        }
+
+        .feature-illustration img {
+            width: 100%;
+        }
+    }
+</style>
 </head>
-<body class="antialiased loading">
-    <div id="loading-screen" class="fixed inset-0 flex flex-col items-center justify-center text-white z-50 opacity-100">
-        <img src="logo.png" alt="Bitcoin II Logo" id="loading-logo" class="mb-4">
-        <h1 class="font-orbitron text-4xl mb-2 tracking-widest">Bitcoin II</h1>
-        <p id="loading-hint" class="text-gray-400 text-lg px-6 text-center"></p>
-        <div id="loading-bar" class="mt-6">
-            <div id="loading-bar-inner"></div>
-        </div>
-        <span id="loading-percent" class="font-orbitron text-lg mt-2">0%</span>
-    </div>
-    <div class="spotlight"></div>
-
-    <!-- Header -->
-    <header class="fixed w-full top-0 z-50 glass-effect">
-        <nav class="w-full px-6 py-3 flex justify-between items-center">
-            <a href="/" class="text-xl font-bold text-white z-50 flex items-center space-x-3">
-                <img src="logo.png" alt="Bitcoin II Logo" class="h-12 w-12 rounded-full">
-                <span style="white-space: nowrap;">Bitcoin II</span>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="https://assets.coingecko.com/coins/images/69865/standard/200.png?1759876613" alt="BC2" class="logo-img">
+                <span>Bitcoin II</span>
             </a>
-            <div id="desktop-nav" class="hidden items-center space-x-8">
-                <a href="#about" class="nav-link text-gray-300 hover:text-amber-500 transition">Discover</a>
-                <a href="#explorer" class="nav-link text-gray-300 hover:text-amber-500 transition">Explorer</a>
-                <a href="#tech" class="nav-link text-gray-300 hover:text-amber-500 transition">Specs</a>
-                <!-- <a href="#mining" class="nav-link text-gray-300 hover:text-amber-500 transition">Mining</a> -->
-                <a href="#community" class="nav-link text-gray-300 hover:text-amber-500 transition">Community</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#home">Home</a>
+                <a href="#features">Buy BC2</a>
+                <a href="https://bitcoinii.ddns.net/explorer/" target="_blank">Explorer</a>
+                <a href="https://github.com/Bitcoin-II/BitcoinII-Core/releases/tag/v29.1.0" target="_blank">Wallet</a>
+                <a href="./BitcoinII_Whitepaper.pdf" target="_blank">Whitepaper</a>
+                <a href="https://miningpoolstats.stream/bitcoinii" target="_blank">Start Mining</a>
             </div>
-            <div class="flex items-center space-x-4">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Bitcoin <span class="hero-accent">Reset</span> Done Right</h1>
+                    <p>Satoshi Nakamoto is often credited with saying, "It might make sense to get some in case it catches on." Many people wish they could have been mining Bitcoin since 2009. Absent a working time machine, this is the best chance at a second chance that we can provide. </p>
+                    <div class="hero-buttons">
+                        <a href="./BitcoinII_Whitepaper.pdf" target="_blank" class="btn btn-primary">Read the Whitepaper</a>
+                        <a href="https://github.com/Bitcoin-II/BitcoinII-Core/releases/tag/v29.1.0" target="_blank" class="btn btn-secondary">Get Wallet</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="bc2-graphic">
+                        <img src="./images/logo_big_ii.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><span class="block">A Sister Chain,</span><span>Not a Competitor</span></h2>
+                <p class="section-subtitle">
+                    BitcoinII is built on the security principles and technology that has proven itself for the past 16 years. The intent is not to compete with, nor attempt to replace Bitcoin, but to become a "Sister Chain" that appeals to "Maxis" and "Newcomers" alike. We encourage people to continue to support Bitcoin and its developers. BitcoinII is offered as an accompaniment to their efforts.
+                </p>
+                <p class="section-subtitle">While Bitcoin (BTC) continues to be a long term investment vehicle, perhaps BitcoinII (BC2) can provide an instrument to be used more freely for day-to-day purchases, by implementing the same proven and familiar technology that millions around the world have grown to understand and trust.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION (mobile-first, alternating left/right) -->
+    <section id="features" class="features pb0">
+        <div class="container">
+            <div class="features-list">
+                <!-- 1 -->
+                <article class="feature-row">
+                    <div class="feature-text">
+                        <h3>Buy & Sell</h3>
+                        <p>
+                            Cut through the confusion. We compare trusted exchanges based on what matters: fees you can afford and payment methods you actually use.
+                        </p>
+                        <a href="javascript:void(0)" class="btn btn-primary feature-cta" onclick="toggleExchanges()">BUY BC2</a>
+                    </div>
+                    <div class="feature-media">
+                        <div class="feature-media-box">
+                            <div class="feature-illustration">
+                                <img src="./images/buy_sell.png" alt="buy BC2">
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
                 
+    <section class="accordion_exchange">
+        <div class="container">
+            <!-- Accordion Content BELOW the article -->
+            <div class="exchanges-accordion" id="exchangesAccordion">
+                <div class="exchanges-grid">
+                    <!-- Exchange 1 -->
+                    <div class="exchange-card">
+                        <div class="exchange-logo">
+                            <img src="./images/CoinEx_Logo.jpg" alt="coinex">
+                        </div>
+                        <h4>CoinEx</h4>
+                        <p>Low trading fees, extensive coin selection</p>
+                        <div class="exchange-features">
+                            <span class="feature-tag">Low Fees</span>
+                            <span class="feature-tag">300+ Coins</span>
+                        </div>
+                        <a href="https://www.coinex.com/" target="_blank" class="exchange-link coinex">Visit Exchange</a>
+                    </div>
+                    
+                    <!-- Exchange 2 -->
+                    <div class="exchange-card">
+                        <div class="exchange-logo">
+                            <img src="./images/RR_Logo.png" alt="Rabbid">
+                        </div>
+                        <h4>Rabbid</h4>
+                        <p>User-friendly, great for beginners</p>
+                        <div class="exchange-features">
+                            <span class="feature-tag">Low Fees</span>
+                            <span class="feature-tag">300+ Coins</span>
+                        </div>
+                        <a href="https://rabid-rabbit.org" target="_blank" class="exchange-link rabbid">Visit Exchange</a>
+                    </div>
+                    
+                    <!-- Exchange 3 -->
+                    <div class="exchange-card">
+                        <div class="exchange-logo">
+                            <img src="./images/nonkyc.png" alt="NonKyc">
+                        </div>
+                        <h4>NonKyc</h4>
+                        <p>Strong security, advanced trading</p>
+                        <div class="exchange-features">
+                            <span class="feature-tag">Low Fees</span>
+                            <span class="feature-tag">300+ Coins</span>
+                        </div>
+                        <a href="https://nonkyc.io/" target="_blank" class="exchange-link nonkyc">Visit Exchange</a>
+                    </div>
+                    
+                    <!-- Exchange 4 -->
+                    <div class="exchange-card">
+                        <div class="exchange-logo">
+                            <img src="./images/biconomy.png" alt="biconomy">
+                        </div>
+                        <h4>Biconomy</h4>
+                        <p>Low trading fees, extensive coin selection</p>
+                        <div class="exchange-features">
+                            <span class="feature-tag">Low Fees</span>
+                            <span class="feature-tag">300+ Coins</span>
+                        </div>
+                        <a href="https://www.biconomy.com" target="_blank" class="exchange-link">Visit Exchange</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="features" class="features pt0">
+        <div class="container">
+            <div class="features-list">
+                <!-- 2 -->
+                <article class="feature-row">
+                    <div class="feature-media">
+                        <div class="feature-media-box">
+                            <div class="feature-illustration">
+                                <img src="./images/nodes.png" alt="nodes">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Nodes</h3>
+                        <p>
+                            Over 10,000 nodes worldwide and growing. No corporate backing, just people who
+                            believe in Bitcoin's true purpose.
+                        </p>
+                        <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank" class="btn btn-primary feature-cta">View network</a>
+                    </div>
+                </article>
+
+                <article class="feature-row">
+                    <div class="feature-media">
+                        <div class="feature-media-box">
+                            <div class="feature-illustration">
+                                <img src="./images/safe_box.png" alt="safe box">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Max Supply</h3>
+                        <p>
+                            21,000,000 maxmimum supply, guaranteeing scarcity and protecting against inflation.
+                        </p>
+                        <a href="https://miningpoolstats.stream/bitcoinii" target="_blank" class="btn btn-secondary feature-max-supply">Start mining</a>
+                    </div>
+                </article>
+
+                <!-- 4 -->
+                <article class="feature-row">
+                    <div class="feature-media">
+                        <div class="feature-media-box">
+                            <div class="feature-illustration">
+                                <img src="./images/mining.png" alt="mining">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>SHA-256 Mining</h3>
+                        <p>
+                            Use your existing Bitcoin mining hardware. Same security, same algorithm,
+                            new opportunity.
+                        </p>
+                        <a href="https://miningpoolstats.stream/bitcoinii" target="blank" class="btn btn-secondary feature-mining">Start mining</a>
+                    </div>
+                </article>
+
+                <!-- 5 -->
+                <article class="feature-row">
+                    <div class="feature-media">
+                        <div class="feature-media-box">
+                            <div class="feature-illustration">
+                                <img src="./images/shild.png" alt="shild">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>No Compromises</h3>
+                        <p>
+                            We didn't "improve" Bitcoin, we simply looked at Core v30 and made a conscious decision: A hard fork at over 100T difficulty could be
+                            considered a text book example of insanity. We chose the more sane approach to the concept that Satoshi Nakamoto's design
+                            of a Peer to Peer Electronic Cash Network probably shouldn't contain random blobs of non monetary data, certainly not entire blocks
+                            filled with such data.
+                        </p>
+                        <a href="./BitcoinII_Whitepaper.pdf" target="_blank" class="btn btn-primary feature-no-compromise">Learn more</a>
+                    </div>
+                </article>
+
+                <!-- 6 -->
+                <article class="feature-row">
+                    <div class="feature-media">
+                        <div class="feature-media-box">
+                            <div class="feature-illustration">
+                                <img src="./images/discord.png" alt="discord">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feature-text">
+                        <h3>Community First</h3>
+                        <p>
+                            Built by Bitcoiners for Bitcoiners. No Venture Capital, no corporate interests.
+                            Just the code and the community.
+                        </p>
+                        <a href="https://discord.gg/bitcoinii" target="_blank" class="btn btn-secondary feature-comunity">Join community</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Bitcoin Code</p>
+                </div>
+                <div class="stat-item">
+                    <h3>SHA-256</h3>
+                    <p>Proof of Work</p>
+                </div>
+                <div class="stat-item">
+                    <h3>0</h3>
+                    <p>Insta-mined Coins</p>
+                </div>
+                <div class="stat-item">
+                    <h3>10,000+</h3>
+                    <p>Network Nodes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready for Your Second Chance?</h2>
+                <p>Join the movement that's bringing back Satoshi's original vision. Mine it, run a node (it's super easy!), be part of the reset.</p>
+                <div class="hero-buttons">
+                    <a href="./BitcoinII_Whitepaper.pdf" target="_blank" class="btn btn-primary">Download Whitepaper</a>
+                    <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank" class="btn btn-secondary">View Node Map</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">
+                        <img src="https://assets.coingecko.com/coins/images/69865/standard/200.png?1759876613" alt="BC2" class="logo-img">
+                        <span>Bitcoin II</span>
+                    </div>
+                    <p class="footer-description">
+                        The true Bitcoin reset. 100% protocol, zero compromises.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Get Started</h4>
+                    <a href="./BitcoinII_Whitepaper.pdf" target="_blank">Whitepaper</a>
+                    <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank">Network Stats</a>
+                    <a href="https://bc2pool.jellyfc.com/?#bc2pool/connect" target="_blank">Mining Guide</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Technology</h4>
+                    <a href="https://miningpoolstats.stream/bitcoinii" target="_blank">Mining Info</a>
+                    <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank">Running Nodes</a>
+                    <a href="https://github.com/Bitcoin-II" target="_blank">GitHub</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Community</h4>
+                    <a href="https://discord.com/invite/bitcoinii" target="_blank">Discord</a>
+                    <a href="https://x.com/TheBitcoinIIOrg" target="_blank">X.com</a>
+                    <a href="https://www.reddit.com/r/BitcoinII/" target="_blank">Reddit</a>
+                    <a href="https://t.me/BitcoinIIOrganization" target="_blank">Telegram</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Bitcoin II - Because Bitcoin deserved a proper reset. © 2025 All rights reserved</p>
+
+                <a href="#" class="creator-badge" title="Built by a BC2 community member">
+                    <span class="creator-dot"></span>
+                
+                    <span class="full-text">
+                        Website made by <strong>BC2 Community Member</strong> <strong>@kzwo</strong>
+                    </span>
+                
+                    <span class="mobile-text">
+                        <strong>Made by BC2 •</strong> <strong>@kzwo</strong>
+                    </span>
                 </a>
-                <button id="theme-toggle" aria-label="Toggle theme" class="text-white focus:outline-none text-xl">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button id="mobile-menu-button" class="hidden text-white focus:outline-none z-50">
-                    <i id="menu-icon" class="fas fa-bars text-2xl"></i>
-                </button>
+
             </div>
-        </nav>
-    </header>
-
-    <!-- Mobile Navigation -->
-    <div id="mobile-menu" class="mobile-nav fixed top-0 right-0 h-full w-full sm:w-64 glass-effect z-40 pt-24 p-8">
-        <a href="#about" class="block text-white text-lg py-3 hover:text-amber-500 transition">Discover</a>
-        <a href="#explorer" class="block text-white text-lg py-3 hover:text-amber-500 transition">Explorer</a>
-        <a href="#tech" class="block text-white text-lg py-3 hover:text-amber-500 transition">Specs</a>
-        <!-- <a href="#mining" class="block text-white text-lg py-3 hover:text-amber-500 transition">Mining</a> -->
-        <a href="#community" class="block text-white text-lg py-3 hover:text-amber-500 transition">Community</a>
-        
-        </a>
-    </div>
-
-    <!-- Hero Section -->
-    <main id="home" class="hero-gradient pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        <canvas id="particle-canvas"></canvas>
-        <div class="container mx-auto px-6 text-center hero-content">
-            <h1 class="hero-title text-4xl md:text-6xl font-black leading-tight mb-6">
-                What if you had a second chance?
-            </h1>
-            <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-10">
-                Satoshi Nakamoto is often credited with saying, "It might make sense to get some in case it catches on." Many people wish they could have been mining Bitcoin since 2009. Absent a working time machine, this is the best chance at a second chance that we can provide.
-            </p>
-            <div class="flex justify-center space-x-4">
-                <a href="https://github.com/Bitcoin-II/BitcoinII-Core" target="_blank" rel="noopener noreferrer" class="btn-primary font-bold py-3 px-8 rounded-lg text-lg">Get Started</a>
-                <a href="#about" class="btn-secondary font-bold py-3 px-8 rounded-lg text-lg">Learn More</a>
-            </div>
-        </div>
-    </main>
-    
-    <!-- Live Stats Section -->
-<!--
-     <section id="stats" class="py-12 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-center">
-                <div class="stat-card p-6 rounded-lg glass-effect text-center w-full max-w-xs">
-                    <p class="text-gray-400 text-lg">Current Price</p>
-                    <p class="text-4xl md:text-5xl font-bold text-white my-2">$<span class="animate-number" data-target="0.01">0.00</span></p>
-                    <p class="text-xs text-gray-500 mt-2">Tuesday, July 8, 2025 at 10:20 PM BST</p>
-                </div>
-            </div>
-        </div>
-    </section>
--->
-     <section id="stats" class="py-12 scroll-reveal">
-       <div class="container mx-auto px-6">
-         <div class="flex justify-center">
-           <div class="stat-card p-6 rounded-lg glass-effect text-center w-full max-w-xs">
-             <p class="text-gray-400 text-lg">Current Price</p>
-             <p class="text-4xl md:text-5xl font-bold text-white my-2">
-               $<span id="live-price">0.00</span>
-             </p>
-             <p id="price-timestamp" class="text-xs text-gray-500 mt-2">Loading timestamp...</p>
-           </div>
-         </div>
-       </div>
-     </section>
-
-    <!-- Explorer Section -->
-    <section id="explorer" class="py-20 bg-black bg-opacity-20 scroll-reveal">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold text-white">Blockchain Explorer</h2>
-            <p class="text-gray-400 mt-4 mb-10 max-w-2xl mx-auto">View transactions, blocks, and network statistics in real-time on the Bitcoin II blockchain.</p>
-            <a href="https://bitcoinii.ddns.net/explorer/" target="_blank" rel="noopener noreferrer" class="btn-primary font-bold py-3 px-8 rounded-lg text-lg">
-                <i class="fas fa-search mr-2"></i>Launch Explorer
-            </a>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white">Back to First Principles</h2>
-                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">A new Proof of Work cryptocurrency built purely on the founding principles of Satoshi Nakamoto's original Bitcoin protocol.</p>
-                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">For detailed insights into the BC2 project, view our <a href="BitcoinII_Whitepaper.pdf" target="_blank" style="color:#f59e0b">whitepaper. <i class="fas fa-arrow-up-right-from-square"></i></a></p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h3 class="text-3xl font-bold text-white mb-4">A Sister Chain, Not a Competitor</h3>
-                    <p class="text-gray-400 mb-6">BitcoinII is built on the security principles and technology that has proven itself for the past 16 years. The intent is not to compete with, nor attempt to replace Bitcoin, but to become a "Sister Chain" that appeals to "Maxis" and "Newcomers" alike. We encourage people to continue to support Bitcoin and its developers. BitcoinII is offered as an accompaniment to their efforts.</p>
-                    <p class="text-gray-400">While Bitcoin (BTC) continues to be a long term investment vehicle, perhaps BitcoinII (BC2) can provide an instrument to be used more freely for day-to-day purchases, by implementing the same proven and familiar technology that millions around the world have grown to understand and trust.</p>
-                </div>
-                <div id="coin-canvas-container" class="p-8">
-                    <canvas id="coin-canvas"></canvas>
-                </div>
-            </div>
-
-
-
-          <div id="nodemap">
-            <h3 class="text-3xl font-bold text-white mb-4">Node Map</h3>
-            <p class="text-gray-400 mb-6">
-              Track active Bitcoin II peers around the world courtesy of the community node scanner.
-            </p>
-            <iframe
-              class="node-frame"
-              src="https://bitcoinii.ddns.net/NodeMap.html"
-              title="Bitcoin II node map"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-              sandbox="allow-scripts allow-same-origin allow-popups"
-            ></iframe>
-            <noscript>
-              <div class="node-fallback">
-                Enable JavaScript to view the live node map, or
-                <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank" rel="noreferrer">open it in a new tab</a>.
-              </div>
-            </noscript>
-            <p class="text-gray-400 mb-6" style="margin: 18px 0 0;">
-              Data source: <a href="https://bitcoinii.ddns.net/NodeMap.html" target="_blank" rel="noreferrer">bitcoinii.ddns.net <i class="fas fa-arrow-up-right-from-square"></i></a>
-            </p>
-          </div>
-
-
-        </div>
-    </section>
-
-    <!-- Specs Section -->
-    <section id="tech" class="py-20 bg-black bg-opacity-20 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white">The Technology</h2>
-                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Familiar, proven, and secure. Click a card to flip for more info.</p>
-            </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-microchip text-amber-500 text-3xl mb-3"></i><strong class="text-lg">PoW Algorithm: SHA256</strong></div><div class="flip-card-back glass-effect"><p>Uses the same battle-tested hashing algorithm as Bitcoin, ensuring robust security and a proven track record.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-coins text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Max Supply: 21,000,000</strong></div><div class="flip-card-back glass-effect"><p>A fixed, finite supply, just like Bitcoin, guaranteeing scarcity and protecting against inflation.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-sync-alt text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Difficulty Retargeting</strong></div><div class="flip-card-back glass-effect"><p>The network difficulty adjusts every 2016 blocks, ensuring block times remain consistent as hashrate changes.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-chart-line text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Subsidy Halving</strong></div><div class="flip-card-back glass-effect"><p>The mining reward is cut in half every 210,000 blocks (~4 years), following Bitcoin's deflationary model.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-gavel text-amber-500 text-3xl mb-3"></i><strong class="text-lg">New Genesis Block</strong></div><div class="flip-card-back glass-effect"><p>BitcoinII starts with a brand new blockchain. It is not a fork of the existing Bitcoin chain, providing a fresh start for everyone.</p></div></div></div>
-                <div class="flip-card h-48"><div class="flip-card-inner"><div class="flip-card-front glass-effect"><i class="fas fa-tachometer-alt text-amber-500 text-3xl mb-3"></i><strong class="text-lg">Difficulty Restart at 1</strong></div><div class="flip-card-back glass-effect"><p>The mining difficulty began at the lowest possible level, opening up mining to standard consumer hardware from day one.</p></div></div></div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- How to Mine Section -->
-<!-- 
-    <section id="mining" class="py-20 scroll-reveal">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white">Start Mining Bitcoin II</h2>
-                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">With difficulty reset to 1, BitcoinII is well within the realm of being mineable with standard consumer grade CPUs.</p>
-            </div>
-            <div class="max-w-4xl mx-auto glass-effect p-8 rounded-lg">
-                <h3 class="text-2xl font-bold text-white mb-4">Recommended Software</h3>
-                <p class="text-gray-300 mb-4">We recommend using Pooler's "cpuminer", also known as "minerd". You can find the source code to compile yourself or pre-compiled binaries ready to run.</p>
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
-                    <a href="https://github.com/pooler/cpuminer" target="_blank" rel="noopener noreferrer" class="btn-secondary font-bold py-2 px-6 rounded-lg flex-1 text-center"><i class="fab fa-github mr-2"></i> Source Code</a>
-                    <a href="https://sourceforge.net/projects/cpuminer/" target="_blank" rel="noopener noreferrer" class="btn-secondary font-bold py-2 px-6 rounded-lg flex-1 text-center"><i class="fas fa-download mr-2"></i> Binaries</a>
-                </div>
-
-                <h3 class="text-2xl font-bold text-white mb-4">A Note on Hashrate</h3>
-                <p class="text-gray-300 mb-4">Today's modern machines have vastly superior hashrates compared to the equipment from the era in which Satoshi Nakamoto developed Bitcoin. It is recommended that miners exercise restraint when devoting hashpower to mining BitcoinII. Doing so may encourage faster mining adoption by the inexperienced, and help keep energy consumption low network-wide as the Difficulty Retargeting mechanism begins to adjust.</p>
-                
-                <h3 class="text-2xl font-bold text-white mb-4">Connect to the Network</h3>
-                <p class="text-gray-300 mb-2">Until more nodes come online and the DNS seed server populates, use the following command in BitcoinII-qt's RPC console to connect:</p>
-                <div class="terminal-window">
-                    <div class="terminal-header">
-                        <div class="terminal-dot" style="background:#ED6A5E;"></div>
-                        <div class="terminal-dot" style="background:#F4BF4F;"></div>
-                        <div class="terminal-dot" style="background:#61C554;"></div>
-                    </div>
-                    <div class="code-block">
-                        <span id="addnode-command">addnode bitcoinII.ddns.net:8338 add</span>
-                        <button class="copy-btn" onclick="copyCommand()">Copy</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
--->
-
-    <!-- Community Section -->
-    <section id="community" class="py-20 scroll-reveal">
-  <div class="container mx-auto px-6 text-center">
-    <h2 class="text-4xl font-bold text-white">The Power of Community</h2>
-    <p class="text-gray-400 mt-4 mb-10 max-w-2xl mx-auto">
-      The future is in your hands. The BitcoinII project needs volunteers: Node Operators, DNS Seed Server Operators, Miners, and more. If you would like to volunteer, reach out to us down below!
-    </p>
-    <div class="flex justify-center items-center space-x-6 md:space-x-8">
-      <a href="https://discord.gg/bitcoinii" target="_blank" rel="noopener noreferrer"
-         class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300">
-        <i class="fab fa-discord text-5xl"></i>
-      </a>
-
-      <a href="https://x.com/TheBitcoinIIOrg" target="_blank" rel="noopener noreferrer"
-         class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1227"
-             class="w-12 h-12 fill-current">
-          <path d="M752.12 496.59L1166.4 0H1061.5L707.38 429.25 428.72 0H0l437.36 651.37L0 1227h104.9l375.44-454.41L789.28 1227H1200z"/>
-        </svg>
-      </a>
-
-      <a href="https://www.reddit.com/r/BitcoinII/" target="_blank" rel="noopener noreferrer"
-         class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300">
-        <i class="fab fa-reddit-alien text-5xl"></i>
-      </a>
-
-      <a href="https://t.me/BitcoinIIOrganization" target="_blank" rel="noopener noreferrer"
-         class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300">
-        <i class="fab fa-telegram text-5xl"></i>
-      </a>
-
-      <a href="https://github.com/Bitcoin-II" target="_blank" rel="noopener noreferrer"
-         class="social-icon text-gray-400 hover:text-amber-500 transition-colors duration-300">
-        <i class="fab fa-github text-5xl"></i>
-      </a>
-    </div>
-  </div>
-</section>
-
-
-    <!-- Footer -->
-    <footer class="bg-black py-12">
-        <div class="container mx-auto px-6 text-center text-gray-500">
-             <a href="#" class="inline-block mb-4">
-                <img src="logo.png" alt="Bitcoin II Logo" class="h-12 w-12 rounded-full">
-            </a>
-            <p>&copy; 2025 Bitcoin II. A Community Project.</p>
         </div>
     </footer>
-    
-    <a href="#home" id="back-to-top"><i class="fas fa-arrow-up"></i></a>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const select = (el, all = false) => {
-                if (typeof el !== 'string') return el;
-                el = el.trim();
-                return all ? [...document.querySelectorAll(el)] : document.querySelector(el);
-            };
+<script>
+    // Mobile menu functionality
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
 
-            const on = (type, el, listener, all = false) => {
-                const selectEl = select(el, all);
-                if (selectEl) {
-                    if (all && selectEl.forEach) {
-                        selectEl.forEach(e => e.addEventListener(type, listener));
-                    } else {
-                        selectEl.addEventListener(type, listener);
-                    }
-                }
-            };
+    // Toggle mobile menu
+    mobileMenuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        navLinks.classList.toggle('active');
+    });
 
-            const throttleRaf = (fn) => {
-                let ticking = false;
-                return function(...args) {
-                    if (!ticking) {
-                        requestAnimationFrame(() => {
-                            fn.apply(this, args);
-                            ticking = false;
-                        });
-                        ticking = true;
-                    }
-                };
-            };
-
-            // --- INITIALIZATION ---
-            initLoadingScreen();
-            initSpotlightEffect();
-            initScrollAnimations();
-            initNumberTicker();
-            initFlipCards();
-            init3dCoin();
-            initParticleEffect();
-            initParallaxEffect();
-            initMobileMenu();
-            initActiveNavOnScroll();
-            initBackToTopButton();
-            initThemeToggle();
-
-            // --- FUNCTION DEFINITIONS ---
-
-            function initLoadingScreen() {
-                document.body.classList.add('loading');
-                const hints = [
-                    'Use the theme button to switch modes.',
-                    'Double-click the coin to pause its spin.',
-                    'Tap a stat card to reveal numbers.',
-                    'Scroll to discover more features.',
-                    'Hover over cards for surprises.'
-                ];
-                const hintEl = select('#loading-hint');
-                hintEl.innerText = hints[Math.floor(Math.random() * hints.length)];
-
-                const hideScreen = () => {
-                    const screen = select('#loading-screen');
-                    if (!screen) return;
-                    screen.classList.add('fade-out');
-                    clearInterval(progressInterval);
-                    setTimeout(() => {
-                        screen.remove();
-                        document.body.classList.remove('loading');
-                    }, 1000);
-                };
-
-                let pageLoaded = document.readyState === 'complete';
-                let timerStarted = false;
-                const percentEl = select('#loading-percent');
-                let progressInterval;
-                const barInner = select('#loading-bar-inner');
-
-                const tryStart = () => {
-                    if (pageLoaded && !timerStarted) {
-                        timerStarted = true;
-                        if (barInner) {
-                            barInner.style.width = '50%'; // Instantly set to 50%
-                            setTimeout(() => {
-                                barInner.classList.add('start');  // Enable transition
-                                barInner.style.width = '100%';    // Animate to 100%
-                            }, 50); // Let browser apply initial width before transition
-                        }
-                        const start = Date.now();
-                        const duration = 1500; // 1.5 seconds
-                        const startPct = 50;
-                        const endPct = 100;
-                        progressInterval = setInterval(() => {
-                            const elapsed = Date.now() - start;
-                            const progress = Math.min(1, elapsed / duration);
-                            const pct = Math.round(startPct + (endPct - startPct) * progress);
-                            if (percentEl) percentEl.innerText = pct + '%';
-                            if (pct >= endPct) clearInterval(progressInterval);
-                        }, 50);
-                        setTimeout(hideScreen, duration + 0); // optional buffer
-                    }
-                };
-                if (pageLoaded) tryStart();
-                else window.addEventListener('load', () => {
-                    pageLoaded = true;
-                    tryStart();
-                });
-            }
-
-            function initSpotlightEffect() {
-                const spotlight = select('.spotlight');
-                let sx = 0, sy = 0, moving = false;
-                on('mousemove', window, (e) => {
-                    sx = e.clientX;
-                    sy = e.clientY;
-                    if (!moving) {
-                        moving = true;
-                        requestAnimationFrame(() => {
-                            spotlight.style.left = `${sx}px`;
-                            spotlight.style.top = `${sy}px`;
-                            moving = false;
-                        });
-                    }
-                });
-            }
-
-            function initScrollAnimations() {
-                const scrollObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                select('.scroll-reveal', true).forEach(el => scrollObserver.observe(el));
-            }
-
-            function initNumberTicker() {
-                const numberObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            animateNumber(entry.target);
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.8 });
-                select('.animate-number', true).forEach(el => numberObserver.observe(el));
-            }
-
-            function animateNumber(element) {
-                const target = parseFloat(element.getAttribute('data-target'));
-                const duration = 1500;
-                let start = 0;
-                const stepTime = 33;
-                const steps = duration / stepTime;
-                const increment = (target - start) / steps;
-                
-                const timer = setInterval(() => {
-                    start += increment;
-                    if (start >= target) {
-                        clearInterval(timer);
-                        start = target;
-                    }
-                    element.innerText = start.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                }, stepTime);
-            }
-
-            function initFlipCards() {
-                on('click', '.flip-card', (e) => {
-                    e.currentTarget.classList.toggle('flipped');
-                }, true);
-            }
-
-            function initMobileMenu() {
-                on('click', '#mobile-menu-button', () => {
-                    select('#mobile-menu').classList.toggle('open');
-                    select('#menu-icon').classList.toggle('fa-bars');
-                    select('#menu-icon').classList.toggle('fa-times');
-                });
-                on('click', '#mobile-menu a', () => {
-                    select('#mobile-menu').classList.remove('open');
-                    select('#menu-icon').classList.add('fa-bars');
-                    select('#menu-icon').classList.remove('fa-times');
-                }, true);
-            }
-            
-            function initActiveNavOnScroll() {
-                const sections = select('section', true);
-                const navLinks = select('#desktop-nav .nav-link', true);
-                
-                const update = () => {
-                    let current = 'home';
-                    sections.forEach(section => {
-                        const sectionTop = section.offsetTop;
-                        if (pageYOffset >= sectionTop - 150) {
-                            current = section.getAttribute('id');
-                        }
-                    });
-
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href').includes(current)) {
-                            link.classList.add('active');
-                        }
-                    });
-                };
-                on('scroll', window, throttleRaf(update));
-            }
-
-            function initBackToTopButton() {
-                const backToTopButton = select('#back-to-top');
-                const toggleBtn = () => {
-                    if (window.scrollY > 300) {
-                        backToTopButton.classList.add('visible');
-                    } else {
-                        backToTopButton.classList.remove('visible');
-                    }
-                };
-                on('scroll', window, throttleRaf(toggleBtn));
-            }
-
-            function initThemeToggle() {
-                const btn = select('#theme-toggle');
-                const icon = btn.querySelector('i');
-                const apply = (theme) => {
-                    document.body.classList.toggle('light', theme === 'light');
-                    icon.classList.toggle('fa-sun', theme === 'light');
-                    icon.classList.toggle('fa-moon', theme !== 'light');
-                    localStorage.setItem('theme', theme);
-                };
-                const saved = localStorage.getItem('theme');
-                if (saved) {
-                    apply(saved);
-                } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-                    apply('light');
-                }
-                btn.addEventListener('click', () => {
-                    const newTheme = document.body.classList.contains('light') ? 'dark' : 'light';
-                    apply(newTheme);
-                });
-            }
-
-            function init3dCoin() {
-                const coinCanvas = select('#coin-canvas');
-                if (!coinCanvas) return;
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ canvas: coinCanvas, alpha: true });
-                renderer.setSize(500, 500);
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-
-                const geometry = new THREE.CylinderGeometry(5, 5, 0.35, 128);
-                const loader = new THREE.TextureLoader();
-                loader.crossOrigin = '';
-                const faceTexture = loader.load('logo3.png');
-
-                const materials = [
-                    new THREE.MeshStandardMaterial({ color: 0xf7931a, metalness: 0.8, roughness: 0.3 }),
-                    new THREE.MeshStandardMaterial({ map: faceTexture, metalness: 0.6, roughness: 0.4 }),
-                    new THREE.MeshStandardMaterial({ map: faceTexture, metalness: 0.6, roughness: 0.4 })
-                ];
-                const coin = new THREE.Mesh(geometry, materials);
-                scene.add(coin);
-
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-                scene.add(ambientLight);
-                const pointLight = new THREE.PointLight(0xffffff, 1);
-                pointLight.position.set(5, 15, 15);
-                scene.add(pointLight);
-                camera.position.z = 10;
-
-                let isDragging = false, rotationPaused = false, previousMousePosition = { x: 0, y: 0 };
-                on('mousedown', coinCanvas, () => { isDragging = true; });
-                on('mouseup', window, () => { isDragging = false; });
-                on('mouseleave', coinCanvas, () => { isDragging = false; coin.scale.set(1,1,1); });
-                on('mouseenter', coinCanvas, () => { coin.scale.set(1.1,1.1,1.1); });
-                on('mousemove', coinCanvas, (e) => {
-                    if (!isDragging) return;
-                    const deltaMove = { x: e.offsetX - previousMousePosition.x, y: e.offsetY - previousMousePosition.y };
-                    coin.rotation.y += deltaMove.x * 0.005;
-                    coin.rotation.x += deltaMove.y * 0.005;
-                    previousMousePosition = { x: e.offsetX, y: e.offsetY };
-                });
-                on('dblclick', coinCanvas, () => { rotationPaused = !rotationPaused; });
-
-                let lastCoinTime = 0;
-                const animateCoin = (t) => {
-                    requestAnimationFrame(animateCoin);
-                    if (t - lastCoinTime > 33) {
-                        if (!isDragging && !rotationPaused) {
-                            coin.rotation.y += 0.005;
-                            coin.rotation.x += 0.001;
-                        }
-                        renderer.render(scene, camera);
-                        lastCoinTime = t;
-                    }
-                }
-                animateCoin();
-            }
-
-            
-            function initParticleEffect() {
-                const particleCanvas = select('#particle-canvas');
-                if (!particleCanvas) return;
-                const pCtx = particleCanvas.getContext('2d');
-                let particles = [];
-                let mouse = { x: null, y: null, radius: 150 };
-
-                class Particle {
-                    constructor() {
-                        this.x = Math.random() * particleCanvas.width;
-                        this.y = Math.random() * particleCanvas.height;
-                        this.baseX = this.x;
-                        this.baseY = this.y;
-                        this.size = Math.random() * 2 + 1;
-                        this.density = (Math.random() * 30) + 1;
-                        this.color = 'rgba(247, 147, 26, 0.6)';
-                    }
-                    update() {
-                        let dx = mouse.x - this.x;
-                        let dy = mouse.y - this.y;
-                        let distance = Math.sqrt(dx * dx + dy * dy);
-                        if (distance < mouse.radius) {
-                            let force = (mouse.radius - distance) / mouse.radius;
-                            this.x -= (dx / distance) * force * this.density * 0.1;
-                            this.y -= (dy / distance) * force * this.density * 0.1;
-                        } else {
-                            if (this.x !== this.baseX) { this.x -= (this.x - this.baseX) / 10; }
-                            if (this.y !== this.baseY) { this.y -= (this.y - this.baseY) / 10; }
-                        }
-                    }
-                    draw() {
-                        pCtx.fillStyle = this.color;
-                        pCtx.beginPath();
-                        pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                        pCtx.fill();
-                    }
-                }
-
-                const resizeCanvas = () => {
-                    particleCanvas.width = particleCanvas.offsetWidth;
-                    particleCanvas.height = particleCanvas.offsetHeight;
-                    initParticles();
-                };
-                
-                function initParticles() {
-                    particles = [];
-                    let numberOfParticles = (particleCanvas.height * particleCanvas.width) / 12000;
-                    for (let i = 0; i < numberOfParticles; i++) {
-                        particles.push(new Particle());
-                    }
-                }
-
-                let lastTime = 0;
-                const animateParticles = (t) => {
-                    if (t - lastTime > 33) {
-                        pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
-                        particles.forEach(p => { p.update(); p.draw(); });
-                        lastTime = t;
-                    }
-                    requestAnimationFrame(animateParticles);
-                }
-
-                resizeCanvas();
-                animateParticles();
-                on('resize', window, resizeCanvas);
-
-                const moveMouse = (e) => { mouse.x = e.clientX; mouse.y = e.clientY; };
-                on('mousemove', window, throttleRaf(moveMouse));
-                on('mouseout', window, () => { mouse.x = null; mouse.y = null; });
-            }
-
-            function initParallaxEffect() {
-                const particle = select('#particle-canvas');
-                if (!particle) return;
-                const handleScroll = () => {
-                    const offset = window.scrollY * 0.2;
-                    particle.style.transform = `translateY(${offset}px)`;
-                };
-                on('scroll', window, throttleRaf(handleScroll));
-            }
-
-            window.copyCommand = function() {
-                const commandText = select('#addnode-command').innerText;
-                const doCopy = (text) => {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = text;
-                    textarea.style.position = 'fixed';
-                    textarea.style.top = '-9999px';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                };
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(commandText);
-                } else {
-                    doCopy(commandText);
-                }
-
-                const btn = select('.copy-btn');
-                btn.innerText = 'Copied!';
-                setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
-            }
-        });
-    </script>
-
-    <script>
-    (function () {
-      function log(...args) {
-        console.log('[BC2]', ...args);
-      }
-
-      async function updatePrice() {
-        const priceEl = document.getElementById('live-price');
-        const timeEl = document.getElementById('price-timestamp');
-
-        if (!priceEl || !timeEl) {
-          log(' Missing #live-price or #price-timestamp in DOM.');
-          return;
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.nav-container') && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
         }
+    });
 
-        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoinii&vs_currencies=usd';
-        log('Fetching from:', url);
-
-        try {
-          const res = await fetch(url);
-          log('Fetch status:', res.status);
-
-          if (!res.ok) throw new Error('Non-200 response: ' + res.status);
-
-          const data = await res.json();
-          log('JSON:', data);
-
-          const rawPrice = data.bitcoinii?.usd;
-          log('Raw price from API:', rawPrice);
-
-          const parsed = parseFloat(rawPrice);
-          if (isNaN(parsed)) {
-            throw new Error(' Parsed value is NaN: ' + rawPrice);
-          }
-
-          priceEl.textContent = parsed.toFixed(3);
-
-          const now = new Date();
-          timeEl.textContent = now.toLocaleString('en-GB', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZoneName: 'short'
-          });
-
-          log('Price and timestamp updated');
-        } catch (err) {
-          log('Error during fetch or update:', err);
-          priceEl.textContent = '--';
-          timeEl.textContent = 'Failed to fetch price';
+    // Close mobile menu when clicking on a link
+    navLinks.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+            navLinks.classList.remove('active');
         }
-      }
+    });
 
-      // Delay until absolutely everything is ready
-      window.addEventListener('load', () => {
-        log(' Page fully loaded. Starting price update...');
-        updatePrice();
-      });
-    })();
-    </script>
+    // Toggle exchanges accordion
+    function toggleExchanges() {
+        const accordion = document.getElementById('exchangesAccordion');
+        accordion.classList.toggle('show');
+    }
 
+    // Close exchanges accordion when clicking outside
+    document.addEventListener('click', function(event) {
+        const accordion = document.getElementById('exchangesAccordion');
+        const button = document.querySelector('.feature-cta');
+        
+        if (!button.contains(event.target) && !accordion.contains(event.target)) {
+            accordion.classList.remove('show');
+        }
+    });
+</script>
 </body>
 </html>
